@@ -1,0 +1,1513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lucky Hardware IMS - Enterprise Edition</title>
+
+    <!-- EXTERNAL LIBRARIES (require internet) -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+
+    <style>
+        :root {
+            --primary: #2563eb; --primary-hover: #1d4ed8; --primary-light: #eff6ff;
+            --bg-body: #f1f5f9; --bg-card: #ffffff; --bg-input: #f8fafc;
+            --text-main: #0f172a; --text-muted: #64748b; --text-light: #94a3b8;
+            --border-light: #e2e8f0; --border-dark: #cbd5e1;
+            --success: #10b981; --success-hover: #059669; --success-bg: #d1fae5;
+            --danger: #ef4444; --danger-hover: #dc2626; --danger-bg: #fee2e2;
+            --warning: #f59e0b; --warning-hover: #d97706; --warning-bg: #fef3c7;
+            --purple: #8b5cf6; --purple-hover: #7c3aed;
+            --dark: #1e293b;
+            --shadow-sm: 0 1px 2px 0 rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+            --radius-sm: 4px; --radius-md: 8px; --radius-lg: 12px;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter','Segoe UI',Tahoma,Geneva,Verdana,sans-serif; }
+        body { background: var(--bg-body); color: var(--text-main); line-height: 1.5; font-size: 14px; }
+
+        .hidden { display: none !important; }
+        .text-center { text-align: center; }
+        .font-bold { font-weight: bold; }
+        .mb-2 { margin-bottom: 1rem; }
+        .ml-2 { margin-left: 8px; }
+
+        /* AUTH */
+        .auth-wrapper { display:flex; align-items:center; justify-content:center; min-height:100vh; padding:20px; background:linear-gradient(135deg,#f1f5f9 0%,#cbd5e1 100%); }
+        .auth-card { background:var(--bg-card); padding:40px; border-radius:var(--radius-lg); box-shadow:var(--shadow-lg); width:100%; max-width:480px; border-top:5px solid var(--primary); }
+        .auth-header { text-align:center; margin-bottom:30px; }
+        .auth-header h1 { color:var(--primary); font-size:28px; font-weight:800; margin-bottom:8px; letter-spacing:-0.5px; }
+        .auth-header p { color:var(--text-muted); font-size:15px; }
+        .auth-form-group { margin-bottom:20px; }
+        .auth-form-group label { display:block; margin-bottom:6px; font-size:13px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; }
+        .auth-form-group input { width:100%; padding:12px 16px; border:1px solid var(--border-dark); border-radius:var(--radius-md); font-size:15px; background:#fff; transition:all .2s; }
+        .auth-form-group input:focus { outline:none; border-color:var(--primary); box-shadow:0 0 0 3px rgba(37,99,235,0.1); }
+        .auth-btn { width:100%; padding:14px; background:var(--primary); color:#fff; border:none; border-radius:var(--radius-md); font-size:16px; font-weight:bold; cursor:pointer; transition:background .2s; margin-top:10px; }
+        .auth-btn:hover { background:var(--primary-hover); }
+        .auth-btn:disabled { opacity:.6; cursor:not-allowed; }
+        .auth-links { display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-top:20px; font-size:14px; }
+        .auth-links a { color:var(--primary); cursor:pointer; font-weight:500; }
+        .auth-links a:hover { text-decoration:underline; }
+
+        /* LAYOUT */
+        .app-layout { display:flex; flex-direction:column; min-height:100vh; }
+        .app-header { background:var(--bg-card); box-shadow:var(--shadow-sm); padding:15px 30px; display:flex; justify-content:space-between; align-items:center; position:sticky; top:0; z-index:50; gap:12px; flex-wrap:wrap; }
+        .brand-title { font-size:24px; font-weight:800; color:var(--primary); letter-spacing:-0.5px; }
+        .brand-subtitle { font-size:13px; color:var(--text-muted); font-weight:500; }
+        .user-controls { display:flex; align-items:center; gap:15px; }
+        .user-email-display { font-size:14px; font-weight:600; background:var(--bg-body); padding:6px 12px; border-radius:20px; }
+        .logout-btn { background:var(--danger); color:#fff; border:none; padding:8px 16px; border-radius:var(--radius-md); font-weight:600; cursor:pointer; }
+        .logout-btn:hover { background:var(--danger-hover); }
+        .app-content { padding:30px; flex:1; max-width:1600px; margin:0 auto; width:100%; }
+
+        /* TABS */
+        .nav-tabs { display:flex; gap:10px; margin-bottom:25px; flex-wrap:wrap; background:var(--bg-card); padding:10px; border-radius:var(--radius-md); box-shadow:var(--shadow-sm); }
+        .tab-btn { padding:12px 24px; border:none; background:transparent; color:var(--text-muted); border-radius:var(--radius-sm); cursor:pointer; font-weight:600; font-size:14px; transition:all .2s; }
+        .tab-btn:hover { background:var(--bg-body); color:var(--text-main); }
+        .tab-btn.active.inv-tab { background:var(--dark); color:#fff; }
+        .tab-btn.active.in-tab { background:var(--success); color:#fff; }
+        .tab-btn.active.out-tab { background:var(--danger); color:#fff; }
+        .tab-btn.active.belti-tab { background:var(--warning); color:#fff; }
+        .tab-btn.active.stock-tab { background:var(--purple); color:#fff; }
+        .tab-btn.active.admin-tab { background:var(--primary); color:#fff; }
+        .tab-pane { display:none; animation:fadeIn .3s ease-in-out; }
+        .tab-pane.active { display:block; }
+        @keyframes fadeIn { from{opacity:0;transform:translateY(5px);} to{opacity:1;transform:translateY(0);} }
+
+        /* FORMS */
+        .data-entry-card { background:var(--bg-card); padding:25px; border-radius:var(--radius-lg); box-shadow:var(--shadow-md); margin-bottom:25px; border-top:5px solid var(--primary); }
+        .data-entry-card.border-inv { border-top-color:var(--dark); }
+        .data-entry-card.border-in { border-top-color:var(--success); }
+        .data-entry-card.border-out { border-top-color:var(--danger); }
+        .data-entry-card.border-belti { border-top-color:var(--warning); }
+        .data-entry-card.border-stock { border-top-color:var(--purple); }
+        .card-header { margin-bottom:20px; }
+        .card-header h2 { font-size:20px; margin-bottom:5px; }
+        .form-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:20px; }
+        .input-group { display:flex; flex-direction:column; }
+        .input-group label { font-size:12px; font-weight:700; margin-bottom:6px; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; }
+        .input-group input, .input-group select, .input-group textarea { padding:10px 14px; border:1px solid var(--border-light); border-radius:var(--radius-md); font-size:14px; background:var(--bg-input); transition:all .2s; color:var(--text-main); }
+        .input-group input:focus, .input-group select:focus { outline:none; border-color:var(--primary); background:#fff; box-shadow:0 0 0 3px rgba(37,99,235,0.1); }
+        .form-actions { margin-top:25px; display:flex; justify-content:flex-end; gap:15px; }
+        .btn-submit { padding:12px 28px; background:var(--primary); color:#fff; border:none; border-radius:var(--radius-md); font-weight:bold; cursor:pointer; font-size:15px; transition:opacity .2s; }
+        .btn-submit:hover { opacity:.9; }
+        .btn-submit.btn-inv { background:var(--dark); }
+        .btn-submit.btn-in { background:var(--success); }
+        .btn-submit.btn-out { background:var(--danger); }
+        .btn-submit.btn-belti { background:var(--warning); }
+        .btn-cancel { padding:10px 20px; background:#fff; color:var(--text-main); border:1px solid var(--border-dark); border-radius:var(--radius-md); font-weight:600; cursor:pointer; }
+        .btn-cancel:hover { background:var(--bg-input); }
+
+        /* EXPORT & FILTER TOOLBAR */
+        .export-toolbar { display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; background:var(--bg-card); padding:12px 20px; border-radius:var(--radius-md); box-shadow:var(--shadow-sm); flex-wrap:wrap; gap:12px; }
+        .toolbar-title { font-weight:bold; font-size:16px; }
+        .export-buttons { display:flex; gap:10px; }
+        .btn-export { padding:8px 16px; border:none; border-radius:var(--radius-sm); font-size:13px; font-weight:600; cursor:pointer; color:#fff; transition:opacity .2s; }
+        .btn-export:hover { opacity:.85; }
+        .btn-excel { background:var(--success); }
+        .btn-pdf { background:var(--danger); }
+        .btn-print { background:var(--text-muted); }
+
+        .filter-bar { display:flex; align-items:center; gap:10px; flex-wrap:wrap; width:100%; background:var(--bg-input); padding:10px 14px; border-radius:var(--radius-md); border:1px solid var(--border-light); margin-top:5px; }
+        .filter-bar input { padding:7px 12px; border:1px solid var(--border-dark); border-radius:var(--radius-sm); font-size:13px; background:#fff; }
+        .filter-bar input:focus { outline:none; border-color:var(--primary); }
+        .filter-bar label { font-size:12px; font-weight:700; color:var(--text-muted); }
+        .btn-clear-filter { padding:7px 12px; background:var(--border-dark); color:var(--text-main); border:none; border-radius:var(--radius-sm); font-size:12px; font-weight:bold; cursor:pointer; }
+        .btn-clear-filter:hover { background:var(--text-muted); color:#fff; }
+
+        /* TABLES */
+        .table-wrapper { background:var(--bg-card); border-radius:var(--radius-lg); box-shadow:var(--shadow-md); overflow-x:auto; margin-bottom:40px; }
+        .data-table { width:100%; border-collapse:collapse; text-align:left; }
+        .data-table th { background:#f8fafc; font-weight:700; color:var(--text-muted); padding:14px 16px; white-space:nowrap; border-bottom:2px solid var(--border-light); font-size:13px; text-transform:uppercase; letter-spacing:0.5px; }
+        .data-table td { padding:14px 16px; border-bottom:1px solid var(--border-light); font-size:14px; vertical-align:middle; }
+        .data-table tbody tr:hover { background:var(--bg-input); }
+        .data-table tbody tr:last-child td { border-bottom:none; }
+
+        /* BADGES */
+        .badge { padding:6px 10px; border-radius:20px; font-size:12px; font-weight:700; display:inline-block; text-align:center; }
+        .badge-transit { background:var(--warning-bg); color:var(--warning-hover); }
+        .badge-received { background:var(--success-bg); color:var(--success-hover); }
+        .badge-low-stock { background:var(--danger-bg); color:var(--danger-hover); animation:pulse 2s infinite; }
+        .badge-ok-stock { background:var(--primary-light); color:var(--primary); }
+        @keyframes pulse { 0%{opacity:1;} 50%{opacity:.7;} 100%{opacity:1;} }
+        .text-success { color:var(--success-hover); font-weight:bold; }
+        .text-danger { color:var(--danger-hover); font-weight:bold; }
+        .text-purple { color:var(--purple-hover); font-weight:bold; font-size:16px; }
+
+        /* ROW ACTIONS */
+        .action-cell { white-space:nowrap; display:flex; gap:8px; }
+        .btn-action { padding:6px 12px; border:none; border-radius:var(--radius-sm); cursor:pointer; font-size:12px; font-weight:600; color:#fff; transition:opacity .2s; }
+        .btn-action:hover { opacity:.85; }
+        .btn-action:disabled { opacity:.4; cursor:not-allowed; }
+        .btn-edit { background:var(--primary); }
+        .btn-void { background:var(--danger); }
+        .btn-slip { background:var(--dark); }
+        .btn-ok { background:var(--success); }
+
+        /* TOASTS */
+        #toast-container { position:fixed; bottom:20px; right:20px; z-index:9999; display:flex; flex-direction:column; gap:10px; }
+        .toast { background:var(--dark); color:#fff; padding:16px 24px; border-radius:var(--radius-md); box-shadow:var(--shadow-lg); font-weight:500; font-size:14px; display:flex; align-items:center; gap:12px; animation:slideInRight .3s ease-out forwards; opacity:0; transform:translateX(100%); min-width:300px; max-width:90vw; }
+        .toast.success { border-left:5px solid var(--success); }
+        .toast.error { border-left:5px solid var(--danger); }
+        .toast.warning { border-left:5px solid var(--warning); }
+        .toast.info { border-left:5px solid var(--primary); }
+        @keyframes slideInRight { to { opacity:1; transform:translateX(0); } }
+        @keyframes fadeOut { to { opacity:0; transform:translateY(10px); } }
+
+        @media (max-width:700px) {
+            .app-content { padding:15px; }
+            .app-header { padding:12px 15px; }
+            .tab-btn { padding:10px 14px; }
+            .filter-bar { flex-direction:column; align-items:stretch; }
+        }
+        @media print {
+            body { background:#fff; }
+            .app-header, .nav-tabs, .data-entry-card, .export-toolbar, #toast-container { display:none !important; }
+            .app-content { padding:0; }
+            .table-wrapper { box-shadow:none; border:none; }
+            .data-table th, .data-table td { border:1px solid #000; padding:8px; color:#000; }
+        }
+    </style>
+</head>
+<body>
+
+    <datalist id="master-inventory-list"></datalist>
+    <div id="toast-container"></div>
+
+    <div id="root">
+        <div style="display:flex; height:100vh; align-items:center; justify-content:center; font-size:24px; color:#2563eb; font-weight:bold;">
+            Loading Lucky Hardware IMS...
+        </div>
+    </div>
+
+    <!-- ===================== TEMPLATES ===================== -->
+
+    <template id="tpl-setup">
+        <div class="auth-wrapper">
+            <div class="auth-card">
+                <div class="auth-header">
+                    <h1>System Configuration</h1>
+                    <p>Connect your Supabase Enterprise Database</p>
+                </div>
+                <div class="auth-form-group">
+                    <label>Supabase Project URL</label>
+                    <input type="text" id="setup-url" placeholder="https://xxxxxxxxxxxx.supabase.co">
+                </div>
+                <div class="auth-form-group">
+                    <label>Anon Public Key</label>
+                    <input type="password" id="setup-key" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...">
+                </div>
+                <button class="auth-btn" onclick="CoreController.saveSetup()">Initialize System</button>
+            </div>
+        </div>
+    </template>
+
+    <template id="tpl-auth">
+        <div class="auth-wrapper">
+            <div class="auth-card">
+                <div class="auth-header">
+                    <h1>🔩 Lucky IMS</h1>
+                    <p>Secure Staff Portal</p>
+                </div>
+                <form id="auth-form" onsubmit="AuthController.handleLogin(event)">
+                    <div class="auth-form-group">
+                        <label>Email Address</label>
+                        <input type="email" id="auth-email" required placeholder="admin@luckyhardware.com" autocomplete="username">
+                    </div>
+                    <div class="auth-form-group">
+                        <label>Password</label>
+                        <input type="password" id="auth-password" required placeholder="••••••••" autocomplete="current-password">
+                    </div>
+                    <button type="submit" class="auth-btn">Sign In to Dashboard</button>
+                </form>
+                <div class="auth-links">
+                    <a onclick="AuthController.handleRegister()">Register New Account</a>
+                    <a onclick="AuthController.handleReset()">Forgot Password?</a>
+                    <a onclick="AuthController.resetConfig()" style="color:var(--text-light);">Change Database</a>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="tpl-recovery">
+        <div class="auth-wrapper">
+            <div class="auth-card">
+                <div class="auth-header">
+                    <h1>Set New Password</h1>
+                    <p>Choose a new password for your account</p>
+                </div>
+                <form onsubmit="AuthController.handleNewPassword(event)">
+                    <div class="auth-form-group">
+                        <label>New Password</label>
+                        <input type="password" id="new-password" required minlength="6" autocomplete="new-password">
+                    </div>
+                    <button type="submit" class="auth-btn">Update Password</button>
+                </form>
+            </div>
+        </div>
+    </template>
+
+    <template id="tpl-pending">
+        <div class="auth-wrapper">
+            <div class="auth-card text-center">
+                <div class="auth-header">
+                    <h1 style="color:var(--warning);">Approval Pending</h1>
+                    <p>Your account has been created successfully.</p>
+                </div>
+                <p class="mb-2">Please wait for the System Administrator to approve your access to the Lucky Hardware Enterprise system.</p>
+                <button class="auth-btn" onclick="AuthController.logout()">Back to Login</button>
+            </div>
+        </div>
+    </template>
+
+    <template id="tpl-app">
+        <div class="app-layout">
+            <header class="app-header">
+                <div>
+                    <h1 class="brand-title">Lucky Hardware IMS</h1>
+                    <p class="brand-subtitle">International Enterprise Inventory &amp; Logistics System</p>
+                </div>
+                <div class="user-controls">
+                    <span class="user-email-display" id="display-user-email">user@domain.com</span>
+                    <button class="logout-btn" onclick="AuthController.logout()">Logout</button>
+                </div>
+            </header>
+
+            <main class="app-content">
+                <nav class="nav-tabs">
+                    <button class="tab-btn inv-tab active" onclick="TabController.switchTab('inventory', this)">📦 Master Inventory</button>
+                    <button class="tab-btn in-tab" onclick="TabController.switchTab('in', this)">📥 Material IN</button>
+                    <button class="tab-btn out-tab" onclick="TabController.switchTab('out', this)">📤 Material OUT</button>
+                    <button class="tab-btn belti-tab" onclick="TabController.switchTab('belti', this)">🚚 Belti (Transport)</button>
+                    <button class="tab-btn stock-tab" onclick="TabController.switchTab('stock', this)">📊 Automatic Stock</button>
+                    <button class="tab-btn admin-tab hidden" id="tab-btn-admin" onclick="TabController.switchTab('admin', this)">👥 Users</button>
+                </nav>
+
+                <!-- MASTER INVENTORY -->
+                <section id="tab-inventory" class="tab-pane active">
+                    <div class="data-entry-card border-inv">
+                        <div class="card-header"><h2>Register Master Material</h2></div>
+                        <form id="form-inv" onsubmit="InventoryController.saveRecord(event)">
+                            <div class="form-grid">
+                                <div class="input-group"><label>Item Code / SKU</label><input type="text" id="inv-code" placeholder="e.g. CEM-01" required></div>
+                                <div class="input-group"><label>Material Name &amp; Description</label><input type="text" id="inv-name" placeholder="e.g. Lucky Cement 50kg" required></div>
+                                <div class="input-group"><label>Category</label><input type="text" id="inv-category" placeholder="e.g. Construction"></div>
+                                <div class="input-group"><label>Unit of Measure</label>
+                                    <select id="inv-unit"><option value="PCS">PCS</option><option value="BAG">BAG</option><option value="KG">KG</option><option value="TONS">TONS</option><option value="Roll">Roll</option><option value="Box">Box</option></select>
+                                </div>
+                                <div class="input-group"><label>Opening Balance (Qty)</label><input type="number" step="any" min="0" id="inv-opening" value="0" required></div>
+                                <div class="input-group"><label>Minimum Stock Alert Level</label><input type="number" step="any" min="0" id="inv-min" value="10" required></div>
+                            </div>
+                            <div class="form-actions">
+                                <button type="button" class="btn-cancel" onclick="FormHelper.clear('inv')">Clear</button>
+                                <button type="submit" id="btn-save-inv" class="btn-submit btn-inv">Save to Master Inventory</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="export-toolbar">
+                        <div class="toolbar-title">Master Inventory Database</div>
+                        <div class="export-buttons">
+                            <button class="btn-export btn-excel" onclick="ExportController.toExcel('tbl-inventory','Master_Inventory')">📥 Excel</button>
+                            <button class="btn-export btn-pdf" onclick="ExportController.toPDF('tbl-inventory','Master Inventory List','Master_Inventory')">📄 PDF</button>
+                            <button class="btn-export btn-print" onclick="ExportController.toPrint('tbl-inventory','Master Inventory List')">🖨️ Print</button>
+                        </div>
+                        <div class="filter-bar">
+                            🔍 <b>Filter:</b>
+                            <input type="text" id="filter-inv-name" placeholder="Search by Material Name / Code..." oninput="InventoryController.renderTable()">
+                            <button class="btn-clear-filter" onclick="FilterController.clear('inv')">Clear Search</button>
+                        </div>
+                    </div>
+                    <div class="table-wrapper">
+                        <table class="data-table" id="tbl-inventory">
+                            <thead><tr><th>Item Code</th><th>Material Name</th><th>Category</th><th>Unit</th><th>Opening Stock</th><th>Min Level</th><th>Action</th></tr></thead>
+                            <tbody id="tbody-inventory"></tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- MATERIAL IN -->
+                <section id="tab-in" class="tab-pane">
+                    <div class="data-entry-card border-in">
+                        <div class="card-header"><h2>Log Material Received (IN)</h2></div>
+                        <form id="form-in" onsubmit="InController.saveRecord(event)">
+                            <div class="form-grid">
+                                <div class="input-group"><label>Date Received</label><input type="date" id="in-date" required></div>
+                                <div class="input-group"><label>Material Description</label><input type="text" id="in-desc" list="master-inventory-list" required autocomplete="off" placeholder="Type to search master list..."></div>
+                                <div class="input-group"><label>Supplier Name</label><input type="text" id="in-supplier" placeholder="Company/Vendor Name"></div>
+                                <div class="input-group"><label>Vehicle Name/No.</label><input type="text" id="in-vehicle" placeholder="e.g. TRK-452"></div>
+                                <div class="input-group"><label>Driver Mobile</label><input type="text" id="in-mobile" placeholder="03xx-xxxxxxx"></div>
+                                <div class="input-group"><label>Received By</label><input type="text" id="in-receiver" placeholder="Staff Name"></div>
+                                <div class="input-group"><label>Storage Location</label><input type="text" id="in-location" placeholder="e.g. Godown 1"></div>
+                                <div class="input-group"><label>Received Quantity</label><input type="number" step="any" min="0" id="in-qty" required></div>
+                                <div class="input-group"><label>Unit of Measure</label>
+                                    <select id="in-unit"><option value="PCS">PCS</option><option value="BAG">BAG</option><option value="KG">KG</option><option value="TONS">TONS</option><option value="Roll">Roll</option><option value="Box">Box</option></select>
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button type="button" class="btn-cancel" onclick="FormHelper.clear('in')">Clear</button>
+                                <button type="submit" id="btn-save-in" class="btn-submit btn-in">Save Material IN Log</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="export-toolbar">
+                        <div class="toolbar-title">Inward Material History</div>
+                        <div class="export-buttons">
+                            <button class="btn-export btn-excel" onclick="ExportController.toExcel('tbl-in','Material_IN_Report')">📥 Excel</button>
+                            <button class="btn-export btn-pdf" onclick="ExportController.toPDF('tbl-in','Material IN Report','Material_IN_Report')">📄 PDF</button>
+                            <button class="btn-export btn-print" onclick="ExportController.toPrint('tbl-in','Material IN Report')">🖨️ Print</button>
+                        </div>
+                        <div class="filter-bar">
+                            🔍 <b>Filter:</b>
+                            <input type="text" id="filter-in-name" placeholder="Search Material / Supplier..." oninput="InController.renderTable()">
+                            <label>From:</label>
+                            <input type="date" id="filter-in-from" onchange="InController.renderTable()">
+                            <label>To:</label>
+                            <input type="date" id="filter-in-to" onchange="InController.renderTable()">
+                            <button class="btn-clear-filter" onclick="FilterController.clear('in')">Clear Search</button>
+                        </div>
+                    </div>
+                    <div class="table-wrapper">
+                        <table class="data-table" id="tbl-in">
+                            <thead><tr><th>Date</th><th>Material Description</th><th>Supplier</th><th>Vehicle</th><th>Mobile</th><th>Receiver</th><th>Location</th><th>Qty</th><th>Unit</th><th>Action</th></tr></thead>
+                            <tbody id="tbody-in"></tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- MATERIAL OUT -->
+                <section id="tab-out" class="tab-pane">
+                    <div class="data-entry-card border-out">
+                        <div class="card-header"><h2>Log Material Issued (OUT)</h2></div>
+                        <form id="form-out" onsubmit="OutController.saveRecord(event)">
+                            <div class="form-grid">
+                                <div class="input-group"><label>Date Issued</label><input type="date" id="out-date" required></div>
+                                <div class="input-group"><label>Item Description</label><input type="text" id="out-item" list="master-inventory-list" required autocomplete="off" placeholder="Type to search master list..."></div>
+                                <div class="input-group"><label>Issued Quantity</label><input type="number" step="any" min="0" id="out-qty" required></div>
+                                <div class="input-group"><label>Unit of Measure</label>
+                                    <select id="out-unit"><option value="PCS">PCS</option><option value="BAG">BAG</option><option value="KG">KG</option><option value="TONS">TONS</option><option value="LTR">LTR</option><option value="MTR">MTR</option></select>
+                                </div>
+                                <div class="input-group"><label>Demand By</label><input type="text" id="out-demand" placeholder="Person requesting"></div>
+                                <div class="input-group"><label>Approved By</label><input type="text" id="out-approved" placeholder="Authorizing Manager"></div>
+                                <div class="input-group"><label>Issued To Location / Site</label><input type="text" id="out-location" placeholder="e.g. Site Phase 2"></div>
+                                <div class="input-group"><label>Contractor / Supplier (Optional)</label><input type="text" id="out-supplier"></div>
+                            </div>
+                            <div class="form-actions">
+                                <button type="button" class="btn-cancel" onclick="FormHelper.clear('out')">Clear</button>
+                                <button type="submit" id="btn-save-out" class="btn-submit btn-out">Save Material OUT Log</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="export-toolbar">
+                        <div class="toolbar-title">Outward Material History</div>
+                        <div class="export-buttons">
+                            <button class="btn-export btn-excel" onclick="ExportController.toExcel('tbl-out','Material_OUT_Report')">📥 Excel</button>
+                            <button class="btn-export btn-pdf" onclick="ExportController.toPDF('tbl-out','Material OUT Report','Material_OUT_Report')">📄 PDF</button>
+                            <button class="btn-export btn-print" onclick="ExportController.toPrint('tbl-out','Material OUT Report')">🖨️ Print</button>
+                        </div>
+                        <div class="filter-bar">
+                            🔍 <b>Filter:</b>
+                            <input type="text" id="filter-out-name" placeholder="Search Material / Demand..." oninput="OutController.renderTable()">
+                            <label>From:</label>
+                            <input type="date" id="filter-out-from" onchange="OutController.renderTable()">
+                            <label>To:</label>
+                            <input type="date" id="filter-out-to" onchange="OutController.renderTable()">
+                            <button class="btn-clear-filter" onclick="FilterController.clear('out')">Clear Search</button>
+                        </div>
+                    </div>
+                    <div class="table-wrapper">
+                        <table class="data-table" id="tbl-out">
+                            <thead><tr><th>Date</th><th>Item</th><th>Qty</th><th>Unit</th><th>Demand By</th><th>Approved By</th><th>For Location</th><th>Supplier</th><th>Action</th></tr></thead>
+                            <tbody id="tbody-out"></tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- BELTI -->
+                <section id="tab-belti" class="tab-pane">
+                    <div class="data-entry-card border-belti">
+                        <div class="card-header"><h2>Register Goods Consignment (Bilti)</h2></div>
+                        <form id="form-belti" onsubmit="BeltiController.saveRecord(event)">
+                            <div class="form-grid">
+                                <div class="input-group"><label>Date</label><input type="date" id="blt-date" required></div>
+                                <div class="input-group"><label>Belti / Bilty No.</label><input type="text" id="blt-no" required placeholder="e.g. BLT-8924"></div>
+                                <div class="input-group"><label>Consignor / Supplier Name</label><input type="text" id="blt-supplier" required placeholder="Shipping Party"></div>
+                                <div class="input-group"><label>Vehicle Name/No.</label><input type="text" id="blt-vehicle" placeholder="e.g. Truck TTA-999"></div>
+                                <div class="input-group"><label>Driver Mobile Number</label><input type="text" id="blt-mobile" placeholder="03xx-xxxxxxx"></div>
+                                <div class="input-group"><label>Material Description</label><input type="text" id="blt-material" list="master-inventory-list" required autocomplete="off" placeholder="What is being shipped?"></div>
+                                <div class="input-group"><label>Quantity</label><input type="number" step="any" min="0" id="blt-qty" required></div>
+                                <div class="input-group"><label>Unit</label>
+                                    <select id="blt-unit"><option value="PCS">PCS</option><option value="BAG">BAG</option><option value="KG">KG</option><option value="TONS">TONS</option><option value="LTR">LTR</option><option value="MTR">MTR</option></select>
+                                </div>
+                                <div class="input-group"><label>Freight Amount (Rs.)</label><input type="number" step="any" min="0" id="blt-freight" placeholder="0.00"></div>
+                                <div class="input-group"><label>Destination / Site</label><input type="text" id="blt-site" placeholder="Delivery Location"></div>
+                                <div class="input-group"><label>Consignee (Received By)</label><input type="text" id="blt-receiver" placeholder="Name of receiver"></div>
+                                <div class="input-group"><label>Delivery Status</label>
+                                    <select id="blt-status"><option value="In Transit">In Transit</option><option value="Received">Received</option></select>
+                                </div>
+                                <div class="input-group" style="grid-column:1 / -1;"><label>Remarks / Notes</label><input type="text" id="blt-remarks" placeholder="Any special instructions or damage notes..."></div>
+                            </div>
+                            <div class="form-actions">
+                                <button type="button" class="btn-cancel" onclick="FormHelper.clear('belti')">Clear</button>
+                                <button type="submit" id="btn-save-belti" class="btn-submit btn-belti">Register Belti Record</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="export-toolbar">
+                        <div class="toolbar-title">Logistics &amp; Bilti Register</div>
+                        <div class="export-buttons">
+                            <button class="btn-export btn-excel" onclick="ExportController.toExcel('tbl-belti','Belti_Transport_Register')">📥 Excel</button>
+                            <button class="btn-export btn-pdf" onclick="ExportController.toPDF('tbl-belti','Belti Transport Register','Belti_Transport_Register')">📄 PDF</button>
+                            <button class="btn-export btn-print" onclick="ExportController.toPrint('tbl-belti','Belti Transport Register')">🖨️ Print</button>
+                        </div>
+                        <div class="filter-bar">
+                            🔍 <b>Filter:</b>
+                            <input type="text" id="filter-belti-name" placeholder="Search Material / Supplier..." oninput="BeltiController.renderTable()">
+                            <input type="text" id="filter-belti-no" placeholder="Search Belti No..." oninput="BeltiController.renderTable()">
+                            <label>From:</label>
+                            <input type="date" id="filter-belti-from" onchange="BeltiController.renderTable()">
+                            <label>To:</label>
+                            <input type="date" id="filter-belti-to" onchange="BeltiController.renderTable()">
+                            <button class="btn-clear-filter" onclick="FilterController.clear('belti')">Clear Search</button>
+                        </div>
+                    </div>
+                    <div class="table-wrapper">
+                        <table class="data-table" id="tbl-belti">
+                            <thead><tr><th>Belti No</th><th>Date</th><th>Material</th><th>Supplier</th><th>Vehicle</th><th>Qty</th><th>Freight</th><th>Destination</th><th>Status</th><th>Action</th></tr></thead>
+                            <tbody id="tbody-belti"></tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- STOCK -->
+                <section id="tab-stock" class="tab-pane">
+                    <div class="data-entry-card border-stock" style="padding-bottom:20px;">
+                        <div class="card-header" style="margin-bottom:5px;"><h2 style="color:var(--purple);">Enterprise Automatic Stock Engine</h2></div>
+                        <p style="color:var(--text-muted); font-size:14px; margin-bottom:10px;">
+                            Real-time available inventory.<br>
+                            <b>Formula:</b> <code>[Opening Stock from Master] + [Total Material IN] - [Total Material OUT]</code><br>
+                            <i>Note: Belti transactions are for transport tracking and do not affect warehouse balances.</i>
+                        </p>
+                        <button class="btn-submit btn-inv" onclick="DataController.fetchAllData()" style="padding:8px 16px; font-size:13px;">Refresh From Database</button>
+                    </div>
+
+                    <div class="export-toolbar">
+                        <div class="toolbar-title">Real-Time Available Stock</div>
+                        <div class="export-buttons">
+                            <button class="btn-export btn-excel" onclick="ExportController.toExcel('tbl-stock','Current_Available_Stock')">📥 Excel</button>
+                            <button class="btn-export btn-pdf" onclick="ExportController.toPDF('tbl-stock','Current Available Stock','Current_Available_Stock')">📄 PDF</button>
+                            <button class="btn-export btn-print" onclick="ExportController.toPrint('tbl-stock','Current Available Stock')">🖨️ Print</button>
+                        </div>
+                        <div class="filter-bar">
+                            🔍 <b>Filter:</b>
+                            <input type="text" id="filter-stock-name" placeholder="Search Material Name..." oninput="StockController.calculateAndRender()">
+                            <button class="btn-clear-filter" onclick="FilterController.clear('stock')">Clear Search</button>
+                        </div>
+                    </div>
+                    <div class="table-wrapper">
+                        <table class="data-table" id="tbl-stock">
+                            <thead><tr>
+                                <th>Material / Item Description</th>
+                                <th style="color:var(--dark);">Opening Stock</th>
+                                <th style="color:var(--success);">Total IN</th>
+                                <th style="color:var(--danger);">Total OUT</th>
+                                <th style="color:var(--purple); font-size:15px;">Available Balance</th>
+                                <th>Unit</th>
+                            </tr></thead>
+                            <tbody id="tbody-stock"></tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- ADMIN: USERS -->
+                <section id="tab-admin" class="tab-pane">
+                    <div class="data-entry-card">
+                        <div class="card-header"><h2>User Access Control</h2></div>
+                        <p style="color:var(--text-muted);">Approve new staff accounts, revoke access, or change roles. You cannot change your own account.</p>
+                    </div>
+                    <div class="table-wrapper">
+                        <table class="data-table" id="tbl-users">
+                            <thead><tr><th>Email</th><th>Role</th><th>Status</th><th>Registered</th><th>Action</th></tr></thead>
+                            <tbody id="tbody-users"></tbody>
+                        </table>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </template>
+
+    <!-- Bilti print slip (template; copied into a print window) -->
+    <div id="print-bilti-area" class="hidden">
+        <div style="font-family:'Inter',sans-serif; background:#fff; padding:30px; color:#0f172a; max-width:800px; margin:auto; border:1px solid #e2e8f0;">
+            <div style="display:flex; justify-content:space-between; border-bottom:3px solid #1e293b; padding-bottom:15px; margin-bottom:20px;">
+                <div>
+                    <div style="font-size:28px; font-weight:900; color:#2563eb; text-transform:uppercase;">LUCKY HARDWARE</div>
+                    <div style="font-size:14px; font-weight:700; color:#475569; letter-spacing:1px;">GOODS CONSIGNMENT RECEIPT (BILTI)</div>
+                    <div style="font-size:12px; color:#64748b; margin-top:5px;">Head Office: Islamkot, Tharparkar<br>Phone: 0341-2885460</div>
+                </div>
+                <div style="text-align:right;">
+                    <div style="background:#1e293b; color:#fff; padding:8px 15px; border-radius:4px; font-weight:bold; font-size:18px; font-family:monospace;" id="slip-no">BLT-0000</div>
+                    <div style="font-size:14px; margin-top:10px;">Date: <b id="slip-date">YYYY-MM-DD</b></div>
+                    <div style="font-size:12px; color:#64748b; margin-top:2px;">Status: <span id="slip-status" style="font-weight:bold;">In Transit</span></div>
+                </div>
+            </div>
+            <div style="display:flex; gap:20px; background:#f8fafc; border:1px solid #cbd5e1; border-radius:6px; padding:15px; margin-bottom:20px;">
+                <div style="flex:1;">
+                    <div style="font-size:11px; font-weight:bold; color:#64748b; margin-bottom:4px; text-transform:uppercase;">Consignor / Supplier</div>
+                    <div style="font-size:18px; font-weight:bold;" id="slip-supplier">Supplier Name</div>
+                    <div style="font-size:12px; margin-top:4px; color:#475569;">Destination: <b id="slip-site">Location</b></div>
+                </div>
+                <div style="width:1px; background:#cbd5e1;"></div>
+                <div style="flex:1;">
+                    <div style="font-size:11px; font-weight:bold; color:#64748b; margin-bottom:4px; text-transform:uppercase;">Carrier / Transport Info</div>
+                    <div style="font-size:16px; font-weight:bold;">Vehicle: <span id="slip-vehicle">Vehicle No</span></div>
+                    <div style="font-size:13px; margin-top:4px; color:#475569;">Driver Mobile: <b id="slip-mobile">0300-0000000</b></div>
+                </div>
+            </div>
+            <table style="width:100%; border-collapse:collapse; margin-bottom:20px; border:1px solid #cbd5e1;">
+                <thead>
+                    <tr style="background:#1e293b; color:#fff;">
+                        <th style="padding:12px; text-align:left; font-size:13px;">MATERIAL DESCRIPTION</th>
+                        <th style="padding:12px; text-align:center; font-size:13px;">QUANTITY</th>
+                        <th style="padding:12px; text-align:center; font-size:13px;">UNIT</th>
+                        <th style="padding:12px; text-align:right; font-size:13px;">FREIGHT AMOUNT</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="padding:15px 12px; border-bottom:1px solid #cbd5e1; font-weight:bold; font-size:16px;" id="slip-material">Material Name</td>
+                        <td style="padding:15px 12px; border-bottom:1px solid #cbd5e1; text-align:center; font-weight:bold; font-size:16px;" id="slip-qty">0</td>
+                        <td style="padding:15px 12px; border-bottom:1px solid #cbd5e1; text-align:center; color:#64748b;" id="slip-unit">PCS</td>
+                        <td style="padding:15px 12px; border-bottom:1px solid #cbd5e1; text-align:right; font-weight:bold; font-family:monospace; font-size:16px;" id="slip-freight">Rs. 0</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" style="padding:12px; text-align:right; font-weight:bold; font-size:14px;">Total Payable Freight:</td>
+                        <td style="padding:12px; text-align:right; font-weight:bold; font-size:18px; color:#2563eb; border-top:2px solid #cbd5e1; font-family:monospace;" id="slip-total">Rs. 0</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div style="font-size:13px; color:#475569; min-height:40px; margin-bottom:40px;"><b>Remarks:</b> <span id="slip-remarks">None</span></div>
+            <div style="display:flex; justify-content:space-between; margin-top:50px;">
+                <div style="width:200px; text-align:center;"><div style="border-top:1px solid #000; padding-top:8px; font-size:12px; font-weight:bold;">Carrier / Driver Signature</div></div>
+                <div style="width:250px; text-align:center;">
+                    <div style="border-top:1px solid #000; padding-top:8px; font-size:12px; font-weight:bold;">
+                        <span id="slip-receiver-sign" style="color:#2563eb; font-size:14px; text-transform:uppercase;">Receiver Name</span><br>
+                        Authorized Consignee Sign
+                    </div>
+                </div>
+            </div>
+            <div style="text-align:center; font-size:10px; color:#94a3b8; margin-top:30px; border-top:1px dashed #cbd5e1; padding-top:10px;">
+                Generated by Lucky Hardware Enterprise System - <span id="slip-timestamp">Time</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================== APPLICATION ===================== -->
+    <script>
+        /** Local (not UTC) calendar date as YYYY-MM-DD. Fixes the 00:00-05:00 PKT "yesterday" bug. */
+        function localDateString() {
+            const d = new Date();
+            const m = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return d.getFullYear() + '-' + m + '-' + day;
+        }
+
+        const AppState = {
+            supabase: null,
+            user: null,
+            recovery: false,
+            loadingProfile: false,
+            inventory: [], materialIn: [], materialOut: [], belti: [],
+            editIds: { inv: null, in: null, out: null, belti: null }
+        };
+        function todayDate() { return localDateString(); }
+
+        /* ---------- UI helpers ---------- */
+        const UI = {
+            toast(msg, type = 'info') {
+                const container = document.getElementById('toast-container');
+                const el = document.createElement('div');
+                el.className = 'toast ' + type;
+                let icon = 'ℹ️';
+                if (type === 'success') icon = '✅';
+                if (type === 'error') icon = '❌';
+                if (type === 'warning') icon = '⚠️';
+                const i = document.createElement('span'); i.textContent = icon;
+                const t = document.createElement('span'); t.textContent = msg;   // textContent: no HTML injection
+                el.appendChild(i); el.appendChild(t);
+                container.appendChild(el);
+                setTimeout(() => {
+                    el.style.animation = 'fadeOut 0.3s ease forwards';
+                    setTimeout(() => el.remove(), 300);
+                }, 4000);
+            },
+            money(amount) {
+                let n = parseFloat(amount);
+                if (isNaN(n)) n = 0;
+                return 'Rs. ' + n.toLocaleString('en-PK', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            },
+            esc(str) {
+                if (str === null || str === undefined) return '';
+                return String(str).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+            },
+            setVal(id, v) { document.getElementById(id).value = (v === null || v === undefined) ? '' : v; },
+            val(id) { return document.getElementById(id).value.trim(); },
+            num(id) { const n = parseFloat(document.getElementById(id).value); return isNaN(n) ? 0 : n; },
+            mount(tplId) {
+                const root = document.getElementById('root');
+                root.innerHTML = '';
+                root.appendChild(document.getElementById(tplId).content.cloneNode(true));
+            }
+        };
+
+        /* ---------- Search & Filter Controller ---------- */
+        const FilterController = {
+            clear(tab) {
+                if (tab === 'inv') {
+                    const el = document.getElementById('filter-inv-name'); if (el) el.value = '';
+                    InventoryController.renderTable();
+                } else if (tab === 'in') {
+                    const elN = document.getElementById('filter-in-name'); if (elN) elN.value = '';
+                    const elF = document.getElementById('filter-in-from'); if (elF) elF.value = '';
+                    const elT = document.getElementById('filter-in-to'); if (elT) elT.value = '';
+                    InController.renderTable();
+                } else if (tab === 'out') {
+                    const elN = document.getElementById('filter-out-name'); if (elN) elN.value = '';
+                    const elF = document.getElementById('filter-out-from'); if (elF) elF.value = '';
+                    const elT = document.getElementById('filter-out-to'); if (elT) elT.value = '';
+                    OutController.renderTable();
+                } else if (tab === 'belti') {
+                    const elN = document.getElementById('filter-belti-name'); if (elN) elN.value = '';
+                    const elB = document.getElementById('filter-belti-no'); if (elB) elB.value = '';
+                    const elF = document.getElementById('filter-belti-from'); if (elF) elF.value = '';
+                    const elT = document.getElementById('filter-belti-to'); if (elT) elT.value = '';
+                    BeltiController.renderTable();
+                } else if (tab === 'stock') {
+                    const elN = document.getElementById('filter-stock-name'); if (elN) elN.value = '';
+                    StockController.calculateAndRender();
+                }
+            }
+        };
+
+        /* ---------- Form state helper ---------- */
+        const FORMS = {
+            inv:   { form: 'form-inv',   btn: 'btn-save-inv',   label: 'Save to Master Inventory', editLabel: 'Update Inventory Item', date: null },
+            in:    { form: 'form-in',    btn: 'btn-save-in',    label: 'Save Material IN Log',     editLabel: 'Update IN Log',         date: 'in-date' },
+            out:   { form: 'form-out',   btn: 'btn-save-out',   label: 'Save Material OUT Log',    editLabel: 'Update OUT Log',        date: 'out-date' },
+            belti: { form: 'form-belti', btn: 'btn-save-belti', label: 'Register Belti Record',    editLabel: 'Update Belti Record',   date: 'blt-date' }
+        };
+        const FormHelper = {
+            clear(key) {
+                const f = FORMS[key];
+                document.getElementById(f.form).reset();
+                if (f.date) document.getElementById(f.date).value = todayDate();
+                document.getElementById(f.btn).textContent = f.label;
+                AppState.editIds[key] = null;
+            },
+            startEdit(key, id) {
+                AppState.editIds[key] = id;
+                document.getElementById(FORMS[key].btn).textContent = FORMS[key].editLabel;
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        };
+
+        /* ---------- Core / boot ---------- */
+        const CoreController = {
+            boot() {
+                const configStr = localStorage.getItem('lucky_ims_config');
+                if (!configStr) { UI.mount('tpl-setup'); return; }
+
+                if (typeof supabase === 'undefined') {
+                    document.getElementById('root').innerHTML =
+                        '<div style="padding:60px; text-align:center; color:#ef4444; font-size:20px; font-weight:bold;">Could not load the Supabase library. Check your internet connection and reload.</div>';
+                    return;
+                }
+                try {
+                    const config = JSON.parse(configStr);
+                    AppState.supabase = supabase.createClient(config.u, config.k);
+                    // IMPORTANT: never await Supabase calls inside this callback (can deadlock) -> defer with setTimeout.
+                    AppState.supabase.auth.onAuthStateChange((event, session) => {
+                        setTimeout(() => CoreController.handleAuthChange(event, session), 0);
+                    });
+                } catch (e) {
+                    localStorage.removeItem('lucky_ims_config');
+                    UI.toast('Configuration corrupted. Please reconfigure.', 'error');
+                    this.boot();
+                }
+            },
+
+            saveSetup() {
+                const url = document.getElementById('setup-url').value.trim();
+                const key = document.getElementById('setup-key').value.trim();
+                if (!url || !key) return UI.toast('URL and Key are required', 'error');
+                if (!/^https:\/\/.+\.supabase\.(co|in)\/?$/.test(url)) return UI.toast('URL should look like https://xxxx.supabase.co', 'error');
+                localStorage.setItem('lucky_ims_config', JSON.stringify({ u: url.replace(/\/$/, ''), k: key }));
+                UI.toast('System configured successfully. Reloading...', 'success');
+                setTimeout(() => location.reload(), 800);
+            },
+
+            async handleAuthChange(event, session) {
+                if (event === 'PASSWORD_RECOVERY') {
+                    AppState.recovery = true;
+                    UI.mount('tpl-recovery');
+                    return;
+                }
+                if (AppState.recovery) return;               // stay on the new-password screen
+                if (event === 'TOKEN_REFRESHED' || event === 'USER_UPDATED') return;
+
+                if (!session) {
+                    AppState.user = null;
+                    AppState.inventory = []; AppState.materialIn = []; AppState.materialOut = []; AppState.belti = [];
+                    UI.mount('tpl-auth');
+                    return;
+                }
+
+                // Supabase re-fires SIGNED_IN on every tab refocus; don't rebuild the UI (it wipes half-typed forms).
+                if (AppState.user && AppState.user.id === session.user.id) return;
+                if (AppState.loadingProfile) return;
+                AppState.loadingProfile = true;
+
+                try {
+                    const { data: profile, error } = await AppState.supabase
+                        .from('profiles').select('*').eq('id', session.user.id).single();
+
+                    if (error || !profile || profile.approved !== true) {
+                        AppState.user = null;
+                        UI.mount('tpl-pending');
+                        return;
+                    }
+                    AppState.user = { id: session.user.id, email: session.user.email, role: profile.role };
+                    this.mountApp();
+                } catch (e) {
+                    console.error(e);
+                    UI.toast('Error checking profile authorization.', 'error');
+                } finally {
+                    AppState.loadingProfile = false;
+                }
+            },
+
+            mountApp() {
+                UI.mount('tpl-app');
+                document.getElementById('display-user-email').textContent = AppState.user.email + (AppState.user.role === 'admin' ? ' (admin)' : '');
+                if (AppState.user.role === 'admin') document.getElementById('tab-btn-admin').classList.remove('hidden');
+                ['in', 'out', 'belti'].forEach(k => FormHelper.clear(k));
+                DataController.fetchAllData();
+            }
+        };
+
+        /* ---------- Authentication ---------- */
+        const AuthController = {
+            async handleLogin(e) {
+                e.preventDefault();
+                const email = document.getElementById('auth-email').value.trim();
+                const pass = document.getElementById('auth-password').value;
+                const btn = e.target.querySelector('button');
+                btn.disabled = true; btn.textContent = 'Authenticating...';
+                const { error } = await AppState.supabase.auth.signInWithPassword({ email, password: pass });
+                if (error) {
+                    UI.toast(error.message, 'error');
+                    btn.disabled = false; btn.textContent = 'Sign In to Dashboard';
+                }
+            },
+            async handleRegister() {
+                const email = document.getElementById('auth-email').value.trim();
+                const pass = document.getElementById('auth-password').value;
+                if (!email || pass.length < 6) return UI.toast('Enter email and a password of at least 6 characters to register.', 'warning');
+                const { error } = await AppState.supabase.auth.signUp({ email, password: pass });
+                if (error) UI.toast(error.message, 'error');
+                else UI.toast('Registration successful. Please wait for Admin approval (check email if confirmation is enabled).', 'success');
+            },
+            async handleReset() {
+                const email = document.getElementById('auth-email').value.trim();
+                if (!email) return UI.toast('Enter your email address in the box first to reset password.', 'warning');
+                const { error } = await AppState.supabase.auth.resetPasswordForEmail(email, { redirectTo: location.href.split('#')[0] });
+                if (error) UI.toast(error.message, 'error');
+                else UI.toast('Password reset email sent if account exists.', 'success');
+            },
+            async handleNewPassword(e) {
+                e.preventDefault();
+                const pass = document.getElementById('new-password').value;
+                const { error } = await AppState.supabase.auth.updateUser({ password: pass });
+                if (error) return UI.toast(error.message, 'error');
+                UI.toast('Password updated. Signing you in...', 'success');
+                AppState.recovery = false;
+                const { data } = await AppState.supabase.auth.getSession();
+                CoreController.handleAuthChange('SIGNED_IN', data.session);
+            },
+            resetConfig() {
+                if (!confirm('Disconnect from this database and enter new Supabase credentials?')) return;
+                localStorage.removeItem('lucky_ims_config');
+                location.reload();
+            },
+            async logout() {
+                AppState.user = null;
+                await AppState.supabase.auth.signOut();
+            }
+        };
+
+        /* ---------- Tabs ---------- */
+        const TabController = {
+            switchTab(tabId, btn) {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+                document.getElementById('tab-' + tabId).classList.add('active');
+                if (tabId === 'stock') StockController.calculateAndRender();
+                if (tabId === 'admin') AdminController.load();
+            }
+        };
+
+        /* ---------- Data layer ---------- */
+        const DataController = {
+            /** Supabase caps a response at 1000 rows. Page through with range() until a short page arrives. */
+            async fetchPaged(buildQuery) {
+                const size = 1000;
+                let from = 0;
+                let all = [];
+                while (true) {
+                    const { data, error } = await buildQuery().range(from, from + size - 1);
+                    if (error) throw error;
+                    const rows = data || [];
+                    all = all.concat(rows);
+                    if (rows.length < size) break;
+                    from += size;
+                }
+                return all;
+            },
+
+            async fetchAllData() {
+                try {
+                    const sb = AppState.supabase;
+                    AppState.inventory = await this.fetchPaged(() =>
+                        sb.from('products').select('*').order('code', { ascending: true }).order('id'));
+
+                    const tx = await this.fetchPaged(() =>
+                        sb.from('transactions').select('*').eq('voided', false)
+                          .order('created_at', { ascending: false }).order('id'));
+
+                    AppState.materialIn = tx.filter(t => t.type === 'IN');
+                    AppState.materialOut = tx.filter(t => t.type === 'OUT');
+                    AppState.belti = tx.filter(t => t.type === 'BELTI');
+
+                    InventoryController.renderTable();
+                    InventoryController.updateDataList();
+                    InController.renderTable();
+                    OutController.renderTable();
+                    BeltiController.renderTable();
+                    StockController.calculateAndRender();
+                } catch (err) {
+                    console.error('Sync error:', err);
+                    UI.toast('Database connection error: ' + (err.message || 'try reloading'), 'error');
+                }
+            },
+
+            /** Void a transaction (soft delete for audit trail) */
+            async voidTransaction(id) {
+                if (!confirm('Are you sure you want to void this record? It will be removed from stock calculations.')) return;
+                const { error } = await AppState.supabase.from('transactions').update({ voided: true }).eq('id', id);
+                if (error) return UI.toast('Error voiding: ' + error.message, 'error');
+                UI.toast('Record voided successfully', 'success');
+                await this.fetchAllData();
+            },
+
+            /** Shared insert/update path for IN / OUT / BELTI */
+            async saveTransaction(key, record, label) {
+                const editId = AppState.editIds[key];
+                const btn = document.getElementById(FORMS[key].btn);
+                btn.disabled = true;
+                try {
+                    let res;
+                    if (editId) res = await AppState.supabase.from('transactions').update(record).eq('id', editId);
+                    else res = await AppState.supabase.from('transactions').insert([record]);
+                    if (res.error) throw res.error;
+                    UI.toast(label + (editId ? ' updated' : ' saved'), 'success');
+                    FormHelper.clear(key);
+                    await this.fetchAllData();
+                } catch (e) {
+                    const m = e.message || String(e);
+                    if (m.indexOf('duplicate') !== -1 || m.indexOf('unique') !== -1) UI.toast('That reference / Belti number already exists.', 'error');
+                    else UI.toast('Error: ' + m, 'error');
+                } finally {
+                    btn.disabled = false;
+                }
+            },
+
+            findProduct(name) {
+                const n = name.toLowerCase();
+                return AppState.inventory.find(p => p.active !== false && p.name.toLowerCase() === n) || null;
+            }
+        };
+
+        /* ---------- Master inventory ---------- */
+        const InventoryController = {
+            async saveRecord(e) {
+                e.preventDefault();
+                const record = {
+                    code: UI.val('inv-code'),
+                    name: UI.val('inv-name'),
+                    category: UI.val('inv-category'),
+                    unit: document.getElementById('inv-unit').value,
+                    opening: UI.num('inv-opening'),
+                    min_stock: UI.num('inv-min'),
+                    active: true
+                };
+                const btn = document.getElementById('btn-save-inv');
+                btn.disabled = true;
+                try {
+                    if (AppState.editIds.inv) {
+                        const { error } = await AppState.supabase.from('products').update(record).eq('id', AppState.editIds.inv);
+                        if (error) throw error;
+                        UI.toast('Item updated successfully', 'success');
+                    } else {
+                        const { error } = await AppState.supabase.from('products').insert([record]);
+                        if (error) throw error;
+                        UI.toast('Item added to Master Inventory', 'success');
+                    }
+                    FormHelper.clear('inv');
+                    await DataController.fetchAllData();
+                } catch (err) {
+                    const m = err.message || String(err);
+                    if (m.indexOf('products_code_active_uq') !== -1) UI.toast('Item Code must be unique!', 'error');
+                    else if (m.indexOf('products_name_active_uq') !== -1) UI.toast('An item with this name already exists!', 'error');
+                    else if (m.indexOf('duplicate') !== -1 || m.indexOf('unique') !== -1) UI.toast('Item Code / Name must be unique!', 'error');
+                    else UI.toast('Error: ' + m, 'error');
+                } finally {
+                    btn.disabled = false;
+                }
+            },
+
+            editRecord(id) {
+                const rec = AppState.inventory.find(i => i.id === id);
+                if (!rec) return;
+                UI.setVal('inv-code', rec.code);
+                UI.setVal('inv-name', rec.name);
+                UI.setVal('inv-category', rec.category);
+                UI.setVal('inv-unit', rec.unit);
+                UI.setVal('inv-opening', rec.opening);
+                UI.setVal('inv-min', rec.min_stock);
+                FormHelper.startEdit('inv', id);
+                UI.toast('Editing Item: ' + rec.code, 'info');
+            },
+
+            async deactivate(id) {
+                if (!confirm('Remove this item from the Master Inventory? Past IN/OUT history is kept.')) return;
+                const { error } = await AppState.supabase.from('products').update({ active: false }).eq('id', id);
+                if (error) return UI.toast('Error: ' + error.message, 'error');
+                UI.toast('Item removed from master list', 'success');
+                if (AppState.editIds.inv === id) FormHelper.clear('inv');
+                await DataController.fetchAllData();
+            },
+
+            renderTable() {
+                const tbody = document.getElementById('tbody-inventory');
+                let active = AppState.inventory.filter(r => r.active !== false);
+
+                // Search Filter Logic
+                const nameFilter = (document.getElementById('filter-inv-name')?.value || '').toLowerCase().trim();
+                if (nameFilter) {
+                    active = active.filter(r => 
+                        (r.name && r.name.toLowerCase().includes(nameFilter)) || 
+                        (r.code && r.code.toLowerCase().includes(nameFilter)) ||
+                        (r.category && r.category.toLowerCase().includes(nameFilter))
+                    );
+                }
+
+                if (active.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="7" class="text-center">No master items found matching filters.</td></tr>';
+                    return;
+                }
+                let html = '';
+                active.forEach(rec => {
+                    html += `<tr>
+                        <td class="font-bold">${UI.esc(rec.code)}</td>
+                        <td class="font-bold">${UI.esc(rec.name)}</td>
+                        <td>${UI.esc(rec.category)}</td>
+                        <td><span class="badge badge-ok-stock">${UI.esc(rec.unit)}</span></td>
+                        <td class="font-bold">${UI.esc(rec.opening)}</td>
+                        <td class="text-danger">${UI.esc(rec.min_stock)}</td>
+                        <td class="action-cell">
+                            <button class="btn-action btn-edit" onclick="InventoryController.editRecord('${UI.esc(rec.id)}')">Edit</button>
+                            <button class="btn-action btn-void" onclick="InventoryController.deactivate('${UI.esc(rec.id)}')">Delete</button>
+                        </td>
+                    </tr>`;
+                });
+                tbody.innerHTML = html;
+            },
+
+            updateDataList() {
+                const dl = document.getElementById('master-inventory-list');
+                dl.innerHTML = '';
+                AppState.inventory.forEach(item => {
+                    if (item.active === false) return;
+                    const opt = document.createElement('option');
+                    opt.value = item.name;
+                    dl.appendChild(opt);
+                });
+            }
+        };
+
+        /* ---------- Material IN ---------- */
+        const InController = {
+            saveRecord(e) {
+                e.preventDefault();
+                const desc = UI.val('in-desc');
+                const p = DataController.findProduct(desc);
+                const record = {
+                    type: 'IN',
+                    tdate: document.getElementById('in-date').value,
+                    material_desc: desc,
+                    product_id: p ? p.id : null,
+                    supplier_name: UI.val('in-supplier'),
+                    vehicle_name: UI.val('in-vehicle'),
+                    mobile_number: UI.val('in-mobile'),
+                    receiver: UI.val('in-receiver'),
+                    location: UI.val('in-location'),
+                    qty: UI.num('in-qty'),
+                    unit: document.getElementById('in-unit').value
+                };
+                DataController.saveTransaction('in', record, 'Material IN');
+            },
+            editRecord(id) {
+                const r = AppState.materialIn.find(i => i.id === id);
+                if (!r) return;
+                UI.setVal('in-date', r.tdate); UI.setVal('in-desc', r.material_desc);
+                UI.setVal('in-supplier', r.supplier_name); UI.setVal('in-vehicle', r.vehicle_name);
+                UI.setVal('in-mobile', r.mobile_number); UI.setVal('in-receiver', r.receiver);
+                UI.setVal('in-location', r.location); UI.setVal('in-qty', r.qty); UI.setVal('in-unit', r.unit);
+                FormHelper.startEdit('in', id);
+            },
+            renderTable() {
+                const tbody = document.getElementById('tbody-in');
+                let list = [...AppState.materialIn];
+
+                // Filters
+                const nameFilter = (document.getElementById('filter-in-name')?.value || '').toLowerCase().trim();
+                const fromDate = document.getElementById('filter-in-from')?.value || '';
+                const toDate = document.getElementById('filter-in-to')?.value || '';
+
+                if (nameFilter) {
+                    list = list.filter(r => 
+                        (r.material_desc && r.material_desc.toLowerCase().includes(nameFilter)) ||
+                        (r.supplier_name && r.supplier_name.toLowerCase().includes(nameFilter)) ||
+                        (r.vehicle_name && r.vehicle_name.toLowerCase().includes(nameFilter)) ||
+                        (r.receiver && r.receiver.toLowerCase().includes(nameFilter))
+                    );
+                }
+                if (fromDate) list = list.filter(r => r.tdate >= fromDate);
+                if (toDate) list = list.filter(r => r.tdate <= toDate);
+
+                if (list.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="10" class="text-center">No IN records found matching filters.</td></tr>';
+                    return;
+                }
+                let html = '';
+                list.forEach(r => {
+                    html += `<tr>
+                        <td>${UI.esc(r.tdate)}</td>
+                        <td class="font-bold">${UI.esc(r.material_desc)}</td>
+                        <td>${UI.esc(r.supplier_name)}</td>
+                        <td>${UI.esc(r.vehicle_name)}</td>
+                        <td>${UI.esc(r.mobile_number)}</td>
+                        <td>${UI.esc(r.receiver)}</td>
+                        <td>${UI.esc(r.location)}</td>
+                        <td class="text-success">${UI.esc(r.qty)}</td>
+                        <td>${UI.esc(r.unit)}</td>
+                        <td class="action-cell">
+                            <button class="btn-action btn-edit" onclick="InController.editRecord('${UI.esc(r.id)}')">Edit</button>
+                            <button class="btn-action btn-void" onclick="DataController.voidTransaction('${UI.esc(r.id)}')">Void</button>
+                        </td>
+                    </tr>`;
+                });
+                tbody.innerHTML = html;
+            }
+        };
+
+        /* ---------- Material OUT ---------- */
+        const OutController = {
+            saveRecord(e) {
+                e.preventDefault();
+                const desc = UI.val('out-item');
+                const qty = UI.num('out-qty');
+                const p = DataController.findProduct(desc);
+
+                // Guard: warn before driving stock negative.
+                const editing = AppState.editIds.out ? AppState.materialOut.find(r => r.id === AppState.editIds.out) : null;
+                const avail = StockController.availableFor({ material_desc: desc, product_id: p ? p.id : null }, editing);
+                if (qty > avail) {
+                    if (!confirm(`Only ${avail.toFixed(2)} available for "${desc}", but you are issuing ${qty}. Stock will go negative. Continue?`)) return;
+                }
+
+                const record = {
+                    type: 'OUT',
+                    tdate: document.getElementById('out-date').value,
+                    material_desc: desc,
+                    product_id: p ? p.id : null,
+                    qty: qty,
+                    unit: document.getElementById('out-unit').value,
+                    demand_by: UI.val('out-demand'),
+                    approved_by: UI.val('out-approved'),
+                    location: UI.val('out-location'),
+                    supplier_name: UI.val('out-supplier')
+                };
+                DataController.saveTransaction('out', record, 'Material OUT');
+            },
+            editRecord(id) {
+                const r = AppState.materialOut.find(i => i.id === id);
+                if (!r) return;
+                UI.setVal('out-date', r.tdate); UI.setVal('out-item', r.material_desc);
+                UI.setVal('out-qty', r.qty); UI.setVal('out-unit', r.unit);
+                UI.setVal('out-demand', r.demand_by); UI.setVal('out-approved', r.approved_by);
+                UI.setVal('out-location', r.location); UI.setVal('out-supplier', r.supplier_name);
+                FormHelper.startEdit('out', id);
+            },
+            renderTable() {
+                const tbody = document.getElementById('tbody-out');
+                let list = [...AppState.materialOut];
+
+                // Filters
+                const nameFilter = (document.getElementById('filter-out-name')?.value || '').toLowerCase().trim();
+                const fromDate = document.getElementById('filter-out-from')?.value || '';
+                const toDate = document.getElementById('filter-out-to')?.value || '';
+
+                if (nameFilter) {
+                    list = list.filter(r => 
+                        (r.material_desc && r.material_desc.toLowerCase().includes(nameFilter)) ||
+                        (r.demand_by && r.demand_by.toLowerCase().includes(nameFilter)) ||
+                        (r.approved_by && r.approved_by.toLowerCase().includes(nameFilter)) ||
+                        (r.location && r.location.toLowerCase().includes(nameFilter)) ||
+                        (r.supplier_name && r.supplier_name.toLowerCase().includes(nameFilter))
+                    );
+                }
+                if (fromDate) list = list.filter(r => r.tdate >= fromDate);
+                if (toDate) list = list.filter(r => r.tdate <= toDate);
+
+                if (list.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="9" class="text-center">No OUT records found matching filters.</td></tr>';
+                    return;
+                }
+                let html = '';
+                list.forEach(r => {
+                    html += `<tr>
+                        <td>${UI.esc(r.tdate)}</td>
+                        <td class="font-bold">${UI.esc(r.material_desc)}</td>
+                        <td class="text-danger">${UI.esc(r.qty)}</td>
+                        <td>${UI.esc(r.unit)}</td>
+                        <td>${UI.esc(r.demand_by)}</td>
+                        <td>${UI.esc(r.approved_by)}</td>
+                        <td>${UI.esc(r.location)}</td>
+                        <td>${UI.esc(r.supplier_name)}</td>
+                        <td class="action-cell">
+                            <button class="btn-action btn-edit" onclick="OutController.editRecord('${UI.esc(r.id)}')">Edit</button>
+                            <button class="btn-action btn-void" onclick="DataController.voidTransaction('${UI.esc(r.id)}')">Void</button>
+                        </td>
+                    </tr>`;
+                });
+                tbody.innerHTML = html;
+            }
+        };
+
+        /* ---------- Belti ---------- */
+        const BeltiController = {
+            saveRecord(e) {
+                e.preventDefault();
+                const record = {
+                    type: 'BELTI',
+                    tdate: document.getElementById('blt-date').value,
+                    ref: UI.val('blt-no'),
+                    supplier_name: UI.val('blt-supplier'),
+                    vehicle_name: UI.val('blt-vehicle'),
+                    mobile_number: UI.val('blt-mobile'),
+                    material_desc: UI.val('blt-material'),
+                    qty: UI.num('blt-qty'),
+                    unit: document.getElementById('blt-unit').value,
+                    price: UI.num('blt-freight'),           // freight stored in "price"
+                    location: UI.val('blt-site'),
+                    receiver: UI.val('blt-receiver'),
+                    status: document.getElementById('blt-status').value,
+                    note: UI.val('blt-remarks')
+                };
+                DataController.saveTransaction('belti', record, 'Belti');
+            },
+            editRecord(id) {
+                const r = AppState.belti.find(i => i.id === id);
+                if (!r) return;
+                UI.setVal('blt-date', r.tdate); UI.setVal('blt-no', r.ref);
+                UI.setVal('blt-supplier', r.supplier_name); UI.setVal('blt-vehicle', r.vehicle_name);
+                UI.setVal('blt-mobile', r.mobile_number); UI.setVal('blt-material', r.material_desc);
+                UI.setVal('blt-qty', r.qty); UI.setVal('blt-unit', r.unit);
+                UI.setVal('blt-freight', r.price); UI.setVal('blt-site', r.location);
+                UI.setVal('blt-receiver', r.receiver); UI.setVal('blt-status', r.status);
+                UI.setVal('blt-remarks', r.note);
+                FormHelper.startEdit('belti', id);
+            },
+            generateSlip(id) {
+                const r = AppState.belti.find(i => i.id === id);
+                if (!r) return;
+                const set = (k, v) => { document.getElementById(k).textContent = v; };
+                set('slip-no', r.ref || 'BLT-N/A');
+                set('slip-date', r.tdate);
+                set('slip-status', r.status || '');
+                set('slip-supplier', r.supplier_name || 'N/A');
+                set('slip-site', r.location || 'N/A');
+                set('slip-vehicle', r.vehicle_name || 'N/A');
+                set('slip-mobile', r.mobile_number || 'N/A');
+                set('slip-material', r.material_desc || 'N/A');
+                set('slip-qty', r.qty);
+                set('slip-unit', r.unit || '');
+                const f = UI.money(r.price);
+                set('slip-freight', f);
+                set('slip-total', f);
+                set('slip-remarks', r.note || 'None');
+                set('slip-receiver-sign', r.receiver || 'Receiver');
+                set('slip-timestamp', new Date().toLocaleString());
+
+                const w = window.open('', '_blank', 'width=900,height=700');
+                if (!w) return UI.toast('Pop-up blocked. Allow pop-ups for this page to print slips.', 'warning');
+                const content = document.getElementById('print-bilti-area').innerHTML;
+                w.document.write(`<html><head><title>Print Belti - ${UI.esc(r.ref)}</title>
+                    <style>
+                        body { margin:0; padding:20px; font-family:sans-serif; background:#e2e8f0; }
+                        @media print { body { background:#fff; padding:0; } @page { margin:1cm; size:A4 portrait; } #print-controls { display:none !important; } }
+                    </style></head><body>
+                    ${content}
+                    <div style="text-align:center; margin-top:30px;" id="print-controls">
+                        <button onclick="window.print()" style="padding:15px 30px; font-size:18px; background:#2563eb; color:#fff; border:none; border-radius:8px; cursor:pointer; font-weight:bold;">🖨️ Print Document</button>
+                    </div></body></html>`);
+                w.document.close();
+            },
+            renderTable() {
+                const tbody = document.getElementById('tbody-belti');
+                let list = [...AppState.belti];
+
+                // Filters
+                const nameFilter = (document.getElementById('filter-belti-name')?.value || '').toLowerCase().trim();
+                const noFilter = (document.getElementById('filter-belti-no')?.value || '').toLowerCase().trim();
+                const fromDate = document.getElementById('filter-belti-from')?.value || '';
+                const toDate = document.getElementById('filter-belti-to')?.value || '';
+
+                if (nameFilter) {
+                    list = list.filter(r => 
+                        (r.material_desc && r.material_desc.toLowerCase().includes(nameFilter)) ||
+                        (r.supplier_name && r.supplier_name.toLowerCase().includes(nameFilter)) ||
+                        (r.vehicle_name && r.vehicle_name.toLowerCase().includes(nameFilter)) ||
+                        (r.location && r.location.toLowerCase().includes(nameFilter))
+                    );
+                }
+                if (noFilter) {
+                    list = list.filter(r => r.ref && r.ref.toLowerCase().includes(noFilter));
+                }
+                if (fromDate) list = list.filter(r => r.tdate >= fromDate);
+                if (toDate) list = list.filter(r => r.tdate <= toDate);
+
+                if (list.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="10" class="text-center">No Belti records found matching filters.</td></tr>';
+                    return;
+                }
+                let html = '';
+                list.forEach(r => {
+                    const cls = r.status === 'Received' ? 'badge-received' : 'badge-transit';
+                    html += `<tr>
+                        <td class="font-bold">${UI.esc(r.ref)}</td>
+                        <td>${UI.esc(r.tdate)}</td>
+                        <td class="font-bold">${UI.esc(r.material_desc)}</td>
+                        <td>${UI.esc(r.supplier_name)}</td>
+                        <td>${UI.esc(r.vehicle_name)}</td>
+                        <td class="font-bold">${UI.esc(r.qty)} <span style="font-size:11px; color:#64748b;">${UI.esc(r.unit)}</span></td>
+                        <td class="font-bold" style="font-family:monospace;">${UI.money(r.price)}</td>
+                        <td>${UI.esc(r.location)}</td>
+                        <td><span class="badge ${cls}">${UI.esc(r.status)}</span></td>
+                        <td class="action-cell">
+                            <button class="btn-action btn-slip" onclick="BeltiController.generateSlip('${UI.esc(r.id)}')">🖨️ Slip</button>
+                            <button class="btn-action btn-edit" style="background:var(--warning);" onclick="BeltiController.editRecord('${UI.esc(r.id)}')">Edit</button>
+                            <button class="btn-action btn-void" onclick="DataController.voidTransaction('${UI.esc(r.id)}')">Void</button>
+                        </td>
+                    </tr>`;
+                });
+                tbody.innerHTML = html;
+            }
+        };
+
+        /* ---------- Automatic stock ---------- */
+        const StockController = {
+            build() {
+                const map = {};
+                const nameIdx = {};
+                AppState.inventory.forEach(item => {
+                    if (item.active === false) return;
+                    const k = 'P:' + item.id;
+                    map[k] = { name: item.name, opening: parseFloat(item.opening) || 0, in: 0, out: 0, unit: item.unit, min: parseFloat(item.min_stock) || 0, isMaster: true };
+                    nameIdx[String(item.name).toUpperCase().trim()] = k;
+                });
+                const resolve = (rec) => {
+                    if (rec.product_id && map['P:' + rec.product_id]) return 'P:' + rec.product_id;
+                    const n = String(rec.material_desc || '').toUpperCase().trim();
+                    if (nameIdx[n]) return nameIdx[n];
+                    const k = 'N:' + n;
+                    if (!map[k]) map[k] = { name: rec.material_desc, opening: 0, in: 0, out: 0, unit: rec.unit, min: 0, isMaster: false };
+                    return k;
+                };
+                AppState.materialIn.forEach(r => { map[resolve(r)].in += parseFloat(r.qty) || 0; });
+                AppState.materialOut.forEach(r => { map[resolve(r)].out += parseFloat(r.qty) || 0; });
+                return { map, resolve };
+            },
+
+            /** Balance for one item; when editing an OUT record, its old qty is added back first. */
+            availableFor(rec, editingRec) {
+                const { map, resolve } = this.build();
+                const k = resolve(rec);
+                const b = map[k];
+                let avail = b.opening + b.in - b.out;
+                if (editingRec && resolve(editingRec) === k) avail += parseFloat(editingRec.qty) || 0;
+                return avail;
+            },
+
+            calculateAndRender() {
+                const tbody = document.getElementById('tbody-stock');
+                if (!tbody) return;
+                const { map } = this.build();
+                let rows = Object.keys(map).map(k => map[k]).sort((a, b) => String(a.name).localeCompare(String(b.name)));
+
+                // Search Filter Logic
+                const nameFilter = (document.getElementById('filter-stock-name')?.value || '').toLowerCase().trim();
+                if (nameFilter) {
+                    rows = rows.filter(d => d.name && String(d.name).toLowerCase().includes(nameFilter));
+                }
+
+                if (rows.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" class="text-center">No stock data available matching filters.</td></tr>';
+                    return;
+                }
+                let html = '';
+                rows.forEach(d => {
+                    const available = d.opening + d.in - d.out;
+                    const isNegative = available < 0;
+                    const isLow = d.isMaster && available <= d.min;
+                    let cls = 'text-purple', badge = '';
+                    if (isNegative) { cls = 'text-danger'; badge = '<span class="badge badge-low-stock ml-2">NEGATIVE</span>'; }
+                    else if (isLow) { cls = 'text-danger'; badge = '<span class="badge badge-low-stock ml-2">LOW STOCK</span>'; }
+                    html += `<tr>
+                        <td><b>${UI.esc(d.name)}</b>${badge}${!d.isMaster ? '<span style="font-size:10px; color:#94a3b8; display:block;">Unregistered Item</span>' : ''}</td>
+                        <td class="font-bold">${d.opening.toFixed(2)}</td>
+                        <td class="text-success">${d.in.toFixed(2)}</td>
+                        <td class="text-danger">${d.out.toFixed(2)}</td>
+                        <td class="${cls}">${available.toFixed(2)}</td>
+                        <td><span class="badge badge-ok-stock">${UI.esc(d.unit)}</span></td>
+                    </tr>`;
+                });
+                tbody.innerHTML = html;
+            }
+        };
+
+        /* ---------- Admin: user approvals ---------- */
+        const AdminController = {
+            async load() {
+                const tbody = document.getElementById('tbody-users');
+                if (!tbody) return;
+                const { data, error } = await AppState.supabase.from('profiles').select('*').order('created_at', { ascending: false });
+                if (error) return UI.toast('Could not load users: ' + error.message, 'error');
+                let html = '';
+                (data || []).forEach(u => {
+                    const me = AppState.user && u.id === AppState.user.id;
+                    const status = u.approved ? '<span class="badge badge-received">Approved</span>' : '<span class="badge badge-transit">Pending</span>';
+                    const created = u.created_at ? new Date(u.created_at).toLocaleDateString() : '';
+                    const approveBtn = u.approved
+                        ? `<button class="btn-action btn-void" ${me ? 'disabled' : ''} onclick="AdminController.setApproval('${UI.esc(u.id)}', false)">Revoke</button>`
+                        : `<button class="btn-action btn-ok" onclick="AdminController.setApproval('${UI.esc(u.id)}', true)">Approve</button>`;
+                    const roleBtn = u.role === 'admin'
+                        ? `<button class="btn-action btn-slip" ${me ? 'disabled' : ''} onclick="AdminController.setRole('${UI.esc(u.id)}', 'staff')">Make Staff</button>`
+                        : `<button class="btn-action btn-edit" onclick="AdminController.setRole('${UI.esc(u.id)}', 'admin')">Make Admin</button>`;
+                    html += `<tr>
+                        <td class="font-bold">${UI.esc(u.email)}${me ? ' (you)' : ''}</td>
+                        <td>${UI.esc(u.role)}</td><td>${status}</td><td>${UI.esc(created)}</td>
+                        <td class="action-cell">${approveBtn}${roleBtn}</td>
+                    </tr>`;
+                });
+                tbody.innerHTML = html || '<tr><td colspan="5" class="text-center">No users.</td></tr>';
+            },
+            async setApproval(id, value) {
+                const { error } = await AppState.supabase.from('profiles').update({ approved: value }).eq('id', id);
+                if (error) return UI.toast(error.message, 'error');
+                UI.toast(value ? 'User approved' : 'Access revoked', 'success');
+                this.load();
+            },
+            async setRole(id, role) {
+                if (!confirm('Change this user\'s role to ' + role + '?')) return;
+                const { error } = await AppState.supabase.from('profiles').update({ role }).eq('id', id);
+                if (error) return UI.toast(error.message, 'error');
+                UI.toast('Role updated', 'success');
+                this.load();
+            }
+        };
+
+        /* ---------- Exports ---------- */
+        const ExportController = {
+            _getCleanTable(tableId) {
+                const table = document.getElementById(tableId).cloneNode(true);
+                const rows = table.rows;
+                if (rows.length === 0) return table;
+                const last = rows[0].cells[rows[0].cells.length - 1].innerText.trim().toUpperCase();
+                if (last === 'ACTION') {
+                    for (let i = 0; i < rows.length; i++) rows[i].deleteCell(-1);
+                }
+                return table;
+            },
+            toExcel(tableId, fileName) {
+                if (typeof XLSX === 'undefined') return UI.toast('Excel export requires an internet connection.', 'error');
+                const wb = XLSX.utils.table_to_book(this._getCleanTable(tableId), { sheet: 'Report Data' });
+                XLSX.writeFile(wb, `${fileName}_${todayDate()}.xlsx`);
+                UI.toast('Excel file downloaded.', 'success');
+            },
+            toPDF(tableId, title, fileName) {
+                if (typeof window.jspdf === 'undefined') return UI.toast('PDF export requires an internet connection.', 'error');
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF('landscape');
+                doc.setFontSize(18); doc.setTextColor(37, 99, 235);
+                doc.text('LUCKY HARDWARE IMS - ' + title.toUpperCase(), 14, 20);
+                doc.setFontSize(10); doc.setTextColor(100, 116, 139);
+                doc.text('Generated on: ' + new Date().toLocaleString(), 14, 28);
+                doc.autoTable({
+                    html: this._getCleanTable(tableId), startY: 35, theme: 'grid',
+                    headStyles: { fillColor: [30, 41, 59], textColor: 255 },
+                    styles: { fontSize: 9, cellPadding: 4 },
+                    alternateRowStyles: { fillColor: [248, 250, 252] }
+                });
+                doc.save(`${fileName}_${todayDate()}.pdf`);
+                UI.toast('PDF document generated.', 'success');
+            },
+            toPrint(tableId, title) {
+                const cleanTable = this._getCleanTable(tableId);
+                const w = window.open('', '_blank');
+                if (!w) return UI.toast('Pop-up blocked. Allow pop-ups to print.', 'warning');
+                w.document.write(`<html><head><title>${UI.esc(title)} - Print View</title>
+                    <style>
+                        body { font-family:'Segoe UI',Tahoma,sans-serif; padding:25px; color:#0f172a; }
+                        h2 { color:#2563eb; margin-bottom:5px; text-transform:uppercase; }
+                        p { color:#64748b; font-size:13px; margin-bottom:25px; }
+                        table { width:100%; border-collapse:collapse; text-align:left; margin-top:10px; font-size:12px; }
+                        th, td { padding:10px; border:1px solid #cbd5e1; }
+                        th { background:#f1f5f9; font-weight:bold; text-transform:uppercase; }
+                        tr:nth-child(even) { background:#f8fafc; }
+                        @media print { button { display:none; } }
+                    </style></head><body>
+                    <h2>Lucky Hardware IMS</h2>
+                    <h3 style="margin-bottom:0;">${UI.esc(title)}</h3>
+                    <p>Generated Document Date: ${new Date().toLocaleString()}</p>
+                    ${cleanTable.outerHTML}
+                    <div style="margin-top:40px; border-top:1px dashed #cbd5e1; padding-top:20px; font-size:11px; text-align:center; color:#94a3b8;">End of Report - Authorized Document</div>
+                    <div style="text-align:center; margin-top:30px;"><button onclick="window.print()" style="padding:10px 20px; background:#1e293b; color:#fff; border:none; cursor:pointer; font-weight:bold; border-radius:4px;">Print Now</button></div>
+                    </body></html>`);
+                w.document.close();
+            }
+        };
+
+        window.addEventListener('DOMContentLoaded', () => CoreController.boot());
+    </script>
+</body>
+</html>
