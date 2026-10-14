@@ -225,10 +225,50 @@
                     <button type="submit" class="auth-btn">Sign In to Dashboard</button>
                 </form>
                 <div class="auth-links">
-                    <a onclick="AuthController.handleRegister()">Register New Account</a>
+                    <a onclick="UI.mount('tpl-register')">Register New Account</a>
                     <a onclick="AuthController.handleReset()">Forgot Password?</a>
                     <a onclick="AuthController.resetConfig()" style="color:var(--text-light);">Change Database</a>
                 </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- NEW: Comprehensive Registration Form -->
+    <template id="tpl-register">
+        <div class="auth-wrapper">
+            <div class="auth-card" style="max-width:600px;">
+                <div class="auth-header">
+                    <h1>User Registration</h1>
+                    <p>Apply for system access</p>
+                </div>
+                <form id="register-form" onsubmit="AuthController.submitRegister(event)">
+                    <div class="form-grid">
+                        <div class="auth-form-group">
+                            <label>Full Name</label>
+                            <input type="text" id="reg-name" required placeholder="e.g. Ali Raza">
+                        </div>
+                        <div class="auth-form-group">
+                            <label>Father's Name</label>
+                            <input type="text" id="reg-fname" required placeholder="e.g. Ahmed Raza">
+                        </div>
+                        <div class="auth-form-group">
+                            <label>CNIC Number</label>
+                            <input type="text" id="reg-cnic" required placeholder="e.g. 12345-1234567-1">
+                        </div>
+                        <div class="auth-form-group">
+                            <label>Email Address</label>
+                            <input type="email" id="reg-email" required placeholder="e.g. ali@domain.com">
+                        </div>
+                        <div class="auth-form-group">
+                            <label>Password</label>
+                            <input type="password" id="reg-password" required minlength="6" placeholder="••••••••">
+                        </div>
+                    </div>
+                    <button type="submit" class="auth-btn" style="margin-top:20px;">Submit Registration</button>
+                    <div class="auth-links text-center" style="justify-content:center; margin-top:20px;">
+                        <a onclick="UI.mount('tpl-auth')">Already have an account? Back to Login</a>
+                    </div>
+                </form>
             </div>
         </div>
     </template>
@@ -258,8 +298,14 @@
                     <h1 style="color:var(--warning);">Approval Pending</h1>
                     <p>Your account has been created successfully.</p>
                 </div>
-                <p class="mb-2">Please wait for the System Administrator to approve your access to the Lucky Hardware Enterprise system.</p>
-                <button class="auth-btn" onclick="AuthController.logout()">Back to Login</button>
+                <p class="mb-2">Please wait for the System Administrator to review your application and grant access.</p>
+                <button class="auth-btn" onclick="AuthController.logout()" style="margin-bottom: 20px;">Back to Login</button>
+
+                <!-- Hidden Master Override for First Admin -->
+                <div style="margin-top:20px; padding-top:20px; border-top:1px dashed var(--border-dark);">
+                    <p style="font-size:12px; color:var(--text-muted); margin-bottom:10px;">Are you the System Owner setting this up for the first time?</p>
+                    <button onclick="AuthController.forceAdmin()" style="background:transparent; color:var(--primary); border:1px solid var(--primary); padding:6px 12px; border-radius:4px; font-size:12px; cursor:pointer;">Claim First Admin Access</button>
+                </div>
             </div>
         </div>
     </template>
@@ -297,7 +343,7 @@
                                 <div class="input-group"><label>Material Name &amp; Description</label><input type="text" id="inv-name" placeholder="e.g. Lucky Cement 50kg" required></div>
                                 <div class="input-group"><label>Category</label><input type="text" id="inv-category" placeholder="e.g. Construction"></div>
                                 <div class="input-group"><label>Unit of Measure</label>
-                                    <select id="inv-unit"><option value="PCS">PCS</option><option value="BAG">BAG</option><option value="KG">KG</option><option value="TONS">TONS</option><option value="Roll">Roll</option><option value="Box">Box</option><option value="Liter">Liter</option><option value="Litre">Litre</option><option value="Lite">Lite</option><option value="Fit">Fit</option><option value="Feet">Feet</option><option value="MTR">MTR</option><option value="CM">CM</option><option value="MM">MM</option><option value="Inch">Inch</option><option value="Yard">Yard</option><option value="SqFt">SqFt</option><option value="SqM">SqM</option><option value="CuFt">CuFt</option><option value="CuM">CuM</option><option value="Gram">Gram</option><option value="MG">MG</option><option value="LBS">LBS</option><option value="Ounce">Ounce</option><option value="Gallon">Gallon</option><option value="Quart">Quart</option><option value="Pint">Pint</option><option value="ML">ML</option><option value="Packet">Packet</option><option value="Pair">Pair</option><option value="Dozen">Dozen</option><option value="Gross">Gross</option><option value="Set">Set</option><option value="Kit">Kit</option><option value="Bundle">Bundle</option><option value="Coil">Coil</option><option value="Drum">Drum</option><option value="Barrel">Barrel</option><option value="Can">Can</option><option value="Bottle">Bottle</option><option value="Tube">Tube</option><option value="Carton">Carton</option><option value="Pallet">Pallet</option><option value="Sack">Sack</option><option value="Load">Load</option><option value="Truckload">Truckload</option><option value="Length">Length</option><option value="Sheet">Sheet</option><option value="Slab">Slab</option><option value="Block">Block</option><option value="Piece">Piece</option><option value="Ream">Ream</option><option value="Quire">Quire</option><option value="Bale">Bale</option><option value="Spool">Spool</option><option value="Reel">Reel</option><option value="Skein">Skein</option><option value="Hank">Hank</option><option value="Ampere">Ampere</option><option value="Volt">Volt</option><option value="Watt">Watt</option><option value="Kilowatt">Kilowatt</option><option value="Ohm">Ohm</option><option value="Joules">Joules</option><option value="Day">Day</option><option value="Hour">Hour</option><option value="Minute">Minute</option><option value="Month">Month</option><option value="Year">Year</option><option value="Shift">Shift</option><option value="Man-Hour">Man-Hour</option><option value="Lot">Lot</option><option value="Batch">Batch</option><option value="Job">Job</option><option value="Task">Task</option><option value="Project">Project</option><option value="Cylinder">Cylinder</option><option value="Tank">Tank</option><option value="Container">Container</option><option value="Bin">Bin</option><option value="Basket">Basket</option><option value="Bucket">Bucket</option><option value="Tray">Tray</option><option value="Rack">Rack</option><option value="Shelf">Shelf</option><option value="Grams">Grams</option><option value="Kilograms">Kilograms</option><option value="Tonnes">Tonnes</option><option value="Metric Ton">Metric Ton</option><option value="Short Ton">Short Ton</option><option value="Long Ton">Long Ton</option><option value="Cubic Meter">Cubic Meter</option><option value="Cubic Centimeter">Cubic Centimeter</option><option value="Cubic Inch">Cubic Inch</option><option value="Cubic Foot">Cubic Foot</option><option value="Cubic Yard">Cubic Yard</option><option value="Square Inch">Square Inch</option><option value="Square Yard">Square Yard</option><option value="Square Centimeter">Square Centimeter</option><option value="Square Millimeter">Square Millimeter</option><option value="Hectare">Hectare</option><option value="Acre">Acre</option><option value="Miles">Miles</option><option value="Kilometers">Kilometers</option><option value="Nautical Miles">Nautical Miles</option><option value="Degrees">Degrees</option><option value="Celsius">Celsius</option><option value="Fahrenheit">Fahrenheit</option><option value="Kelvin">Kelvin</option><option value="Bar">Bar</option><option value="PSI">PSI</option><option value="Pascal">Pascal</option><option value="Atmosphere">Atmosphere</option></select>
+                                    <select id="inv-unit"><option value="PCS">PCS</option><option value="BAG">BAG</option><option value="KG">KG</option><option value="TONS">TONS</option><option value="Roll">Roll</option><option value="Box">Box</option><option value="Liter">Liter</option><option value="Feet">Feet</option><option value="MTR">MTR</option><option value="Inch">Inch</option><option value="SqFt">SqFt</option><option value="CuFt">CuFt</option><option value="Packet">Packet</option><option value="Dozen">Dozen</option><option value="Bundle">Bundle</option><option value="Drum">Drum</option><option value="Carton">Carton</option></select>
                                 </div>
                                 <div class="input-group"><label>Opening Balance (Qty)</label><input type="number" step="any" min="0" id="inv-opening" value="0" required></div>
                                 <div class="input-group"><label>Minimum Stock Alert Level</label><input type="number" step="any" min="0" id="inv-min" value="10" required></div>
@@ -345,7 +391,7 @@
                                 <div class="input-group"><label>Storage Location</label><input type="text" id="in-location" placeholder="e.g. Godown 1"></div>
                                 <div class="input-group"><label>Received Quantity</label><input type="number" step="any" min="0" id="in-qty" required></div>
                                 <div class="input-group"><label>Unit of Measure</label>
-                                    <select id="in-unit"><option value="PCS">PCS</option><option value="BAG">BAG</option><option value="KG">KG</option><option value="TONS">TONS</option><option value="Roll">Roll</option><option value="Box">Box</option><option value="Liter">Liter</option><option value="Litre">Litre</option><option value="Lite">Lite</option><option value="Fit">Fit</option><option value="Feet">Feet</option><option value="MTR">MTR</option><option value="CM">CM</option><option value="MM">MM</option><option value="Inch">Inch</option><option value="Yard">Yard</option><option value="SqFt">SqFt</option><option value="SqM">SqM</option><option value="CuFt">CuFt</option><option value="CuM">CuM</option><option value="Gram">Gram</option><option value="MG">MG</option><option value="LBS">LBS</option><option value="Ounce">Ounce</option><option value="Gallon">Gallon</option><option value="Quart">Quart</option><option value="Pint">Pint</option><option value="ML">ML</option><option value="Packet">Packet</option><option value="Pair">Pair</option><option value="Dozen">Dozen</option><option value="Gross">Gross</option><option value="Set">Set</option><option value="Kit">Kit</option><option value="Bundle">Bundle</option><option value="Coil">Coil</option><option value="Drum">Drum</option><option value="Barrel">Barrel</option><option value="Can">Can</option><option value="Bottle">Bottle</option><option value="Tube">Tube</option><option value="Carton">Carton</option><option value="Pallet">Pallet</option><option value="Sack">Sack</option><option value="Load">Load</option><option value="Truckload">Truckload</option><option value="Length">Length</option><option value="Sheet">Sheet</option><option value="Slab">Slab</option><option value="Block">Block</option><option value="Piece">Piece</option><option value="Ream">Ream</option><option value="Quire">Quire</option><option value="Bale">Bale</option><option value="Spool">Spool</option><option value="Reel">Reel</option><option value="Skein">Skein</option><option value="Hank">Hank</option><option value="Ampere">Ampere</option><option value="Volt">Volt</option><option value="Watt">Watt</option><option value="Kilowatt">Kilowatt</option><option value="Ohm">Ohm</option><option value="Joules">Joules</option><option value="Day">Day</option><option value="Hour">Hour</option><option value="Minute">Minute</option><option value="Month">Month</option><option value="Year">Year</option><option value="Shift">Shift</option><option value="Man-Hour">Man-Hour</option><option value="Lot">Lot</option><option value="Batch">Batch</option><option value="Job">Job</option><option value="Task">Task</option><option value="Project">Project</option><option value="Cylinder">Cylinder</option><option value="Tank">Tank</option><option value="Container">Container</option><option value="Bin">Bin</option><option value="Basket">Basket</option><option value="Bucket">Bucket</option><option value="Tray">Tray</option><option value="Rack">Rack</option><option value="Shelf">Shelf</option><option value="Grams">Grams</option><option value="Kilograms">Kilograms</option><option value="Tonnes">Tonnes</option><option value="Metric Ton">Metric Ton</option><option value="Short Ton">Short Ton</option><option value="Long Ton">Long Ton</option><option value="Cubic Meter">Cubic Meter</option><option value="Cubic Centimeter">Cubic Centimeter</option><option value="Cubic Inch">Cubic Inch</option><option value="Cubic Foot">Cubic Foot</option><option value="Cubic Yard">Cubic Yard</option><option value="Square Inch">Square Inch</option><option value="Square Yard">Square Yard</option><option value="Square Centimeter">Square Centimeter</option><option value="Square Millimeter">Square Millimeter</option><option value="Hectare">Hectare</option><option value="Acre">Acre</option><option value="Miles">Miles</option><option value="Kilometers">Kilometers</option><option value="Nautical Miles">Nautical Miles</option><option value="Degrees">Degrees</option><option value="Celsius">Celsius</option><option value="Fahrenheit">Fahrenheit</option><option value="Kelvin">Kelvin</option><option value="Bar">Bar</option><option value="PSI">PSI</option><option value="Pascal">Pascal</option><option value="Atmosphere">Atmosphere</option></select>
+                                    <select id="in-unit"><option value="PCS">PCS</option><option value="BAG">BAG</option><option value="KG">KG</option><option value="TONS">TONS</option><option value="Feet">Feet</option><option value="MTR">MTR</option><option value="Carton">Carton</option></select>
                                 </div>
                             </div>
                             <div class="form-actions">
@@ -390,7 +436,7 @@
                                 <div class="input-group"><label>Item Description</label><input type="text" id="out-item" list="master-inventory-list" required autocomplete="off" placeholder="Type to search master list..."></div>
                                 <div class="input-group"><label>Issued Quantity</label><input type="number" step="any" min="0" id="out-qty" required></div>
                                 <div class="input-group"><label>Unit of Measure</label>
-                                    <select id="out-unit"><option value="PCS">PCS</option><option value="BAG">BAG</option><option value="KG">KG</option><option value="TONS">TONS</option><option value="Roll">Roll</option><option value="Box">Box</option><option value="Liter">Liter</option><option value="Litre">Litre</option><option value="Lite">Lite</option><option value="Fit">Fit</option><option value="Feet">Feet</option><option value="MTR">MTR</option><option value="CM">CM</option><option value="MM">MM</option><option value="Inch">Inch</option><option value="Yard">Yard</option><option value="SqFt">SqFt</option><option value="SqM">SqM</option><option value="CuFt">CuFt</option><option value="CuM">CuM</option><option value="Gram">Gram</option><option value="MG">MG</option><option value="LBS">LBS</option><option value="Ounce">Ounce</option><option value="Gallon">Gallon</option><option value="Quart">Quart</option><option value="Pint">Pint</option><option value="ML">ML</option><option value="Packet">Packet</option><option value="Pair">Pair</option><option value="Dozen">Dozen</option><option value="Gross">Gross</option><option value="Set">Set</option><option value="Kit">Kit</option><option value="Bundle">Bundle</option><option value="Coil">Coil</option><option value="Drum">Drum</option><option value="Barrel">Barrel</option><option value="Can">Can</option><option value="Bottle">Bottle</option><option value="Tube">Tube</option><option value="Carton">Carton</option><option value="Pallet">Pallet</option><option value="Sack">Sack</option><option value="Load">Load</option><option value="Truckload">Truckload</option><option value="Length">Length</option><option value="Sheet">Sheet</option><option value="Slab">Slab</option><option value="Block">Block</option><option value="Piece">Piece</option><option value="Ream">Ream</option><option value="Quire">Quire</option><option value="Bale">Bale</option><option value="Spool">Spool</option><option value="Reel">Reel</option><option value="Skein">Skein</option><option value="Hank">Hank</option><option value="Ampere">Ampere</option><option value="Volt">Volt</option><option value="Watt">Watt</option><option value="Kilowatt">Kilowatt</option><option value="Ohm">Ohm</option><option value="Joules">Joules</option><option value="Day">Day</option><option value="Hour">Hour</option><option value="Minute">Minute</option><option value="Month">Month</option><option value="Year">Year</option><option value="Shift">Shift</option><option value="Man-Hour">Man-Hour</option><option value="Lot">Lot</option><option value="Batch">Batch</option><option value="Job">Job</option><option value="Task">Task</option><option value="Project">Project</option><option value="Cylinder">Cylinder</option><option value="Tank">Tank</option><option value="Container">Container</option><option value="Bin">Bin</option><option value="Basket">Basket</option><option value="Bucket">Bucket</option><option value="Tray">Tray</option><option value="Rack">Rack</option><option value="Shelf">Shelf</option><option value="Grams">Grams</option><option value="Kilograms">Kilograms</option><option value="Tonnes">Tonnes</option><option value="Metric Ton">Metric Ton</option><option value="Short Ton">Short Ton</option><option value="Long Ton">Long Ton</option><option value="Cubic Meter">Cubic Meter</option><option value="Cubic Centimeter">Cubic Centimeter</option><option value="Cubic Inch">Cubic Inch</option><option value="Cubic Foot">Cubic Foot</option><option value="Cubic Yard">Cubic Yard</option><option value="Square Inch">Square Inch</option><option value="Square Yard">Square Yard</option><option value="Square Centimeter">Square Centimeter</option><option value="Square Millimeter">Square Millimeter</option><option value="Hectare">Hectare</option><option value="Acre">Acre</option><option value="Miles">Miles</option><option value="Kilometers">Kilometers</option><option value="Nautical Miles">Nautical Miles</option><option value="Degrees">Degrees</option><option value="Celsius">Celsius</option><option value="Fahrenheit">Fahrenheit</option><option value="Kelvin">Kelvin</option><option value="Bar">Bar</option><option value="PSI">PSI</option><option value="Pascal">Pascal</option><option value="Atmosphere">Atmosphere</option></select>
+                                    <select id="out-unit"><option value="PCS">PCS</option><option value="BAG">BAG</option><option value="KG">KG</option><option value="TONS">TONS</option><option value="Feet">Feet</option><option value="MTR">MTR</option><option value="Carton">Carton</option></select>
                                 </div>
                                 <div class="input-group"><label>Demand By</label><input type="text" id="out-demand" placeholder="Person requesting"></div>
                                 <div class="input-group"><label>Approved By</label><input type="text" id="out-approved" placeholder="Authorizing Manager"></div>
@@ -443,7 +489,7 @@
                                 <div class="input-group"><label>Material Description</label><input type="text" id="blt-material" list="master-inventory-list" required autocomplete="off" placeholder="What is being shipped?"></div>
                                 <div class="input-group"><label>Quantity</label><input type="number" step="any" min="0" id="blt-qty" required></div>
                                 <div class="input-group"><label>Unit</label>
-                                    <select id="blt-unit"><option value="PCS">PCS</option><option value="BAG">BAG</option><option value="KG">KG</option><option value="TONS">TONS</option><option value="Roll">Roll</option><option value="Box">Box</option><option value="Liter">Liter</option><option value="Litre">Litre</option><option value="Lite">Lite</option><option value="Fit">Fit</option><option value="Feet">Feet</option><option value="MTR">MTR</option><option value="CM">CM</option><option value="MM">MM</option><option value="Inch">Inch</option><option value="Yard">Yard</option><option value="SqFt">SqFt</option><option value="SqM">SqM</option><option value="CuFt">CuFt</option><option value="CuM">CuM</option><option value="Gram">Gram</option><option value="MG">MG</option><option value="LBS">LBS</option><option value="Ounce">Ounce</option><option value="Gallon">Gallon</option><option value="Quart">Quart</option><option value="Pint">Pint</option><option value="ML">ML</option><option value="Packet">Packet</option><option value="Pair">Pair</option><option value="Dozen">Dozen</option><option value="Gross">Gross</option><option value="Set">Set</option><option value="Kit">Kit</option><option value="Bundle">Bundle</option><option value="Coil">Coil</option><option value="Drum">Drum</option><option value="Barrel">Barrel</option><option value="Can">Can</option><option value="Bottle">Bottle</option><option value="Tube">Tube</option><option value="Carton">Carton</option><option value="Pallet">Pallet</option><option value="Sack">Sack</option><option value="Load">Load</option><option value="Truckload">Truckload</option><option value="Length">Length</option><option value="Sheet">Sheet</option><option value="Slab">Slab</option><option value="Block">Block</option><option value="Piece">Piece</option><option value="Ream">Ream</option><option value="Quire">Quire</option><option value="Bale">Bale</option><option value="Spool">Spool</option><option value="Reel">Reel</option><option value="Skein">Skein</option><option value="Hank">Hank</option><option value="Ampere">Ampere</option><option value="Volt">Volt</option><option value="Watt">Watt</option><option value="Kilowatt">Kilowatt</option><option value="Ohm">Ohm</option><option value="Joules">Joules</option><option value="Day">Day</option><option value="Hour">Hour</option><option value="Minute">Minute</option><option value="Month">Month</option><option value="Year">Year</option><option value="Shift">Shift</option><option value="Man-Hour">Man-Hour</option><option value="Lot">Lot</option><option value="Batch">Batch</option><option value="Job">Job</option><option value="Task">Task</option><option value="Project">Project</option><option value="Cylinder">Cylinder</option><option value="Tank">Tank</option><option value="Container">Container</option><option value="Bin">Bin</option><option value="Basket">Basket</option><option value="Bucket">Bucket</option><option value="Tray">Tray</option><option value="Rack">Rack</option><option value="Shelf">Shelf</option><option value="Grams">Grams</option><option value="Kilograms">Kilograms</option><option value="Tonnes">Tonnes</option><option value="Metric Ton">Metric Ton</option><option value="Short Ton">Short Ton</option><option value="Long Ton">Long Ton</option><option value="Cubic Meter">Cubic Meter</option><option value="Cubic Centimeter">Cubic Centimeter</option><option value="Cubic Inch">Cubic Inch</option><option value="Cubic Foot">Cubic Foot</option><option value="Cubic Yard">Cubic Yard</option><option value="Square Inch">Square Inch</option><option value="Square Yard">Square Yard</option><option value="Square Centimeter">Square Centimeter</option><option value="Square Millimeter">Square Millimeter</option><option value="Hectare">Hectare</option><option value="Acre">Acre</option><option value="Miles">Miles</option><option value="Kilometers">Kilometers</option><option value="Nautical Miles">Nautical Miles</option><option value="Degrees">Degrees</option><option value="Celsius">Celsius</option><option value="Fahrenheit">Fahrenheit</option><option value="Kelvin">Kelvin</option><option value="Bar">Bar</option><option value="PSI">PSI</option><option value="Pascal">Pascal</option><option value="Atmosphere">Atmosphere</option></select>
+                                    <select id="blt-unit"><option value="PCS">PCS</option><option value="BAG">BAG</option><option value="KG">KG</option><option value="TONS">TONS</option><option value="Feet">Feet</option></select>
                                 </div>
                                 <div class="input-group"><label>Freight Amount (Rs.)</label><input type="number" step="any" min="0" id="blt-freight" placeholder="0.00"></div>
                                 <div class="input-group"><label>Destination / Site</label><input type="text" id="blt-site" placeholder="Delivery Location"></div>
@@ -534,7 +580,7 @@
                     </div>
                     <div class="table-wrapper">
                         <table class="data-table" id="tbl-users">
-                            <thead><tr><th>Email</th><th>Role</th><th>Status</th><th>Registered</th><th>Action</th></tr></thead>
+                            <thead><tr><th>Name</th><th>Father Name</th><th>CNIC</th><th>Email</th><th>Role</th><th>Status</th><th>Registered</th><th>Action</th></tr></thead>
                             <tbody id="tbody-users"></tbody>
                         </table>
                     </div>
@@ -543,7 +589,7 @@
         </div>
     </template>
 
-    <!-- Bilti print slip (template; copied into a print window) -->
+    <!-- Bilti print slip -->
     <div id="print-bilti-area" class="hidden">
         <div style="font-family:'Inter',sans-serif; background:#fff; padding:30px; color:#0f172a; max-width:800px; margin:auto; border:1px solid #e2e8f0;">
             <div style="display:flex; justify-content:space-between; border-bottom:3px solid #1e293b; padding-bottom:15px; margin-bottom:20px;">
@@ -611,7 +657,6 @@
 
     <!-- ===================== APPLICATION ===================== -->
     <script>
-        /** Local (not UTC) calendar date as YYYY-MM-DD. Fixes the 00:00-05:00 PKT "yesterday" bug. */
         function localDateString() {
             const d = new Date();
             const m = String(d.getMonth() + 1).padStart(2, '0');
@@ -629,7 +674,6 @@
         };
         function todayDate() { return localDateString(); }
 
-        /* ---------- UI helpers ---------- */
         const UI = {
             toast(msg, type = 'info') {
                 const container = document.getElementById('toast-container');
@@ -640,7 +684,7 @@
                 if (type === 'error') icon = '❌';
                 if (type === 'warning') icon = '⚠️';
                 const i = document.createElement('span'); i.textContent = icon;
-                const t = document.createElement('span'); t.textContent = msg;   // textContent: no HTML injection
+                const t = document.createElement('span'); t.textContent = msg;
                 el.appendChild(i); el.appendChild(t);
                 container.appendChild(el);
                 setTimeout(() => {
@@ -667,7 +711,6 @@
             }
         };
 
-        /* ---------- Search & Filter Controller ---------- */
         const FilterController = {
             clear(tab) {
                 if (tab === 'inv') {
@@ -696,7 +739,6 @@
             }
         };
 
-        /* ---------- Form state helper ---------- */
         const FORMS = {
             inv:   { form: 'form-inv',   btn: 'btn-save-inv',   label: 'Save to Master Inventory', editLabel: 'Update Inventory Item', date: null },
             in:    { form: 'form-in',    btn: 'btn-save-in',    label: 'Save Material IN Log',     editLabel: 'Update IN Log',         date: 'in-date' },
@@ -718,7 +760,6 @@
             }
         };
 
-        /* ---------- Core / boot ---------- */
         const CoreController = {
             boot() {
                 const configStr = localStorage.getItem('lucky_ims_config');
@@ -732,7 +773,6 @@
                 try {
                     const config = JSON.parse(configStr);
                     AppState.supabase = supabase.createClient(config.u, config.k);
-                    // IMPORTANT: never await Supabase calls inside this callback (can deadlock) -> defer with setTimeout.
                     AppState.supabase.auth.onAuthStateChange((event, session) => {
                         setTimeout(() => CoreController.handleAuthChange(event, session), 0);
                     });
@@ -759,7 +799,7 @@
                     UI.mount('tpl-recovery');
                     return;
                 }
-                if (AppState.recovery) return;               // stay on the new-password screen
+                if (AppState.recovery) return;
                 if (event === 'TOKEN_REFRESHED' || event === 'USER_UPDATED') return;
 
                 if (!session) {
@@ -769,17 +809,26 @@
                     return;
                 }
 
-                // Supabase re-fires SIGNED_IN on every tab refocus; don't rebuild the UI (it wipes half-typed forms).
                 if (AppState.user && AppState.user.id === session.user.id) return;
                 if (AppState.loadingProfile) return;
                 AppState.loadingProfile = true;
 
                 try {
+                    // Try to sync metadata to profiles if missing (helps with registration)
+                    const meta = session.user.user_metadata;
+                    if (meta && meta.name) {
+                        await AppState.supabase.from('profiles').update({
+                            name: meta.name,
+                            father_name: meta.father_name,
+                            cnic: meta.cnic
+                        }).eq('id', session.user.id);
+                    }
+
                     const { data: profile, error } = await AppState.supabase
                         .from('profiles').select('*').eq('id', session.user.id).single();
 
                     if (error || !profile || profile.approved !== true) {
-                        AppState.user = null;
+                        AppState.user = { id: session.user.id, email: session.user.email }; // temp for pending screen
                         UI.mount('tpl-pending');
                         return;
                     }
@@ -802,7 +851,6 @@
             }
         };
 
-        /* ---------- Authentication ---------- */
         const AuthController = {
             async handleLogin(e) {
                 e.preventDefault();
@@ -816,13 +864,55 @@
                     btn.disabled = false; btn.textContent = 'Sign In to Dashboard';
                 }
             },
-            async handleRegister() {
-                const email = document.getElementById('auth-email').value.trim();
-                const pass = document.getElementById('auth-password').value;
-                if (!email || pass.length < 6) return UI.toast('Enter email and a password of at least 6 characters to register.', 'warning');
-                const { error } = await AppState.supabase.auth.signUp({ email, password: pass });
-                if (error) UI.toast(error.message, 'error');
-                else UI.toast('Registration successful. Please wait for Admin approval (check email if confirmation is enabled).', 'success');
+            async submitRegister(e) {
+                e.preventDefault();
+                const name = UI.val('reg-name');
+                const fname = UI.val('reg-fname');
+                const cnic = UI.val('reg-cnic');
+                const email = UI.val('reg-email');
+                const pass = UI.val('reg-password');
+                const btn = e.target.querySelector('button');
+                
+                btn.disabled = true; btn.textContent = 'Registering...';
+
+                // SignUp with custom metadata
+                const { data, error } = await AppState.supabase.auth.signUp({ 
+                    email, password: pass,
+                    options: { data: { name: name, father_name: fname, cnic: cnic } }
+                });
+
+                if (error) {
+                    UI.toast(error.message, 'error');
+                    btn.disabled = false; btn.textContent = 'Submit Registration';
+                    return;
+                }
+
+                // Push details directly to profile table (upsert in case trigger already made row)
+                if (data?.user) {
+                    await AppState.supabase.from('profiles').upsert({
+                        id: data.user.id,
+                        email: email,
+                        name: name,
+                        father_name: fname,
+                        cnic: cnic,
+                        role: 'staff',
+                        approved: false
+                    });
+                }
+
+                UI.toast('Registration submitted successfully! Approval is pending.', 'success');
+                // Will automatically trigger handleAuthChange
+            },
+            async forceAdmin() {
+                // This allows the very first person to bypass the lock
+                if (!AppState.user) return;
+                const { error } = await AppState.supabase.from('profiles').update({ role: 'admin', approved: true }).eq('id', AppState.user.id);
+                if (error) {
+                    UI.toast('Auto-approve failed. ' + error.message, 'error');
+                } else {
+                    UI.toast('First Admin Access Granted! Loading...', 'success');
+                    setTimeout(() => location.reload(), 1000);
+                }
             },
             async handleReset() {
                 const email = document.getElementById('auth-email').value.trim();
@@ -852,7 +942,6 @@
             }
         };
 
-        /* ---------- Tabs ---------- */
         const TabController = {
             switchTab(tabId, btn) {
                 document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -864,9 +953,7 @@
             }
         };
 
-        /* ---------- Data layer ---------- */
         const DataController = {
-            /** Supabase caps a response at 1000 rows. Page through with range() until a short page arrives. */
             async fetchPaged(buildQuery) {
                 const size = 1000;
                 let from = 0;
@@ -908,7 +995,6 @@
                 }
             },
 
-            /** Void a transaction (soft delete for audit trail) */
             async voidTransaction(id) {
                 if (!confirm('Are you sure you want to void this record? It will be removed from stock calculations.')) return;
                 const { error } = await AppState.supabase.from('transactions').update({ voided: true }).eq('id', id);
@@ -917,7 +1003,6 @@
                 await this.fetchAllData();
             },
 
-            /** Shared insert/update path for IN / OUT / BELTI */
             async saveTransaction(key, record, label) {
                 const editId = AppState.editIds[key];
                 const btn = document.getElementById(FORMS[key].btn);
@@ -945,7 +1030,6 @@
             }
         };
 
-        /* ---------- Master inventory ---------- */
         const InventoryController = {
             async saveRecord(e) {
                 e.preventDefault();
@@ -1008,9 +1092,8 @@
             renderTable() {
                 const tbody = document.getElementById('tbody-inventory');
                 let active = AppState.inventory.filter(r => r.active !== false);
-
-                // Search Filter Logic
                 const nameFilter = (document.getElementById('filter-inv-name')?.value || '').toLowerCase().trim();
+                
                 if (nameFilter) {
                     active = active.filter(r => 
                         (r.name && r.name.toLowerCase().includes(nameFilter)) || 
@@ -1040,7 +1123,6 @@
                 });
                 tbody.innerHTML = html;
             },
-
             updateDataList() {
                 const dl = document.getElementById('master-inventory-list');
                 dl.innerHTML = '';
@@ -1053,7 +1135,6 @@
             }
         };
 
-        /* ---------- Material IN ---------- */
         const InController = {
             saveRecord(e) {
                 e.preventDefault();
@@ -1086,8 +1167,6 @@
             renderTable() {
                 const tbody = document.getElementById('tbody-in');
                 let list = [...AppState.materialIn];
-
-                // Filters
                 const nameFilter = (document.getElementById('filter-in-name')?.value || '').toLowerCase().trim();
                 const fromDate = document.getElementById('filter-in-from')?.value || '';
                 const toDate = document.getElementById('filter-in-to')?.value || '';
@@ -1129,7 +1208,6 @@
             }
         };
 
-        /* ---------- Material OUT ---------- */
         const OutController = {
             saveRecord(e) {
                 e.preventDefault();
@@ -1137,7 +1215,6 @@
                 const qty = UI.num('out-qty');
                 const p = DataController.findProduct(desc);
 
-                // Guard: warn before driving stock negative.
                 const editing = AppState.editIds.out ? AppState.materialOut.find(r => r.id === AppState.editIds.out) : null;
                 const avail = StockController.availableFor({ material_desc: desc, product_id: p ? p.id : null }, editing);
                 if (qty > avail) {
@@ -1170,8 +1247,6 @@
             renderTable() {
                 const tbody = document.getElementById('tbody-out');
                 let list = [...AppState.materialOut];
-
-                // Filters
                 const nameFilter = (document.getElementById('filter-out-name')?.value || '').toLowerCase().trim();
                 const fromDate = document.getElementById('filter-out-from')?.value || '';
                 const toDate = document.getElementById('filter-out-to')?.value || '';
@@ -1213,7 +1288,6 @@
             }
         };
 
-        /* ---------- Belti ---------- */
         const BeltiController = {
             saveRecord(e) {
                 e.preventDefault();
@@ -1227,7 +1301,7 @@
                     material_desc: UI.val('blt-material'),
                     qty: UI.num('blt-qty'),
                     unit: document.getElementById('blt-unit').value,
-                    price: UI.num('blt-freight'),            // freight stored in "price"
+                    price: UI.num('blt-freight'),
                     location: UI.val('blt-site'),
                     receiver: UI.val('blt-receiver'),
                     status: document.getElementById('blt-status').value,
@@ -1285,8 +1359,6 @@
             renderTable() {
                 const tbody = document.getElementById('tbody-belti');
                 let list = [...AppState.belti];
-
-                // Filters
                 const nameFilter = (document.getElementById('filter-belti-name')?.value || '').toLowerCase().trim();
                 const noFilter = (document.getElementById('filter-belti-no')?.value || '').toLowerCase().trim();
                 const fromDate = document.getElementById('filter-belti-from')?.value || '';
@@ -1300,9 +1372,7 @@
                         (r.location && r.location.toLowerCase().includes(nameFilter))
                     );
                 }
-                if (noFilter) {
-                    list = list.filter(r => r.ref && r.ref.toLowerCase().includes(noFilter));
-                }
+                if (noFilter) list = list.filter(r => r.ref && r.ref.toLowerCase().includes(noFilter));
                 if (fromDate) list = list.filter(r => r.tdate >= fromDate);
                 if (toDate) list = list.filter(r => r.tdate <= toDate);
 
@@ -1334,7 +1404,6 @@
             }
         };
 
-        /* ---------- Automatic stock ---------- */
         const StockController = {
             build() {
                 const map = {};
@@ -1357,8 +1426,6 @@
                 AppState.materialOut.forEach(r => { map[resolve(r)].out += parseFloat(r.qty) || 0; });
                 return { map, resolve };
             },
-
-            /** Balance for one item; when editing an OUT record, its old qty is added back first. */
             availableFor(rec, editingRec) {
                 const { map, resolve } = this.build();
                 const k = resolve(rec);
@@ -1367,18 +1434,14 @@
                 if (editingRec && resolve(editingRec) === k) avail += parseFloat(editingRec.qty) || 0;
                 return avail;
             },
-
             calculateAndRender() {
                 const tbody = document.getElementById('tbody-stock');
                 if (!tbody) return;
                 const { map } = this.build();
                 let rows = Object.keys(map).map(k => map[k]).sort((a, b) => String(a.name).localeCompare(String(b.name)));
 
-                // Search Filter Logic
                 const nameFilter = (document.getElementById('filter-stock-name')?.value || '').toLowerCase().trim();
-                if (nameFilter) {
-                    rows = rows.filter(d => d.name && String(d.name).toLowerCase().includes(nameFilter));
-                }
+                if (nameFilter) rows = rows.filter(d => d.name && String(d.name).toLowerCase().includes(nameFilter));
 
                 if (rows.length === 0) {
                     tbody.innerHTML = '<tr><td colspan="6" class="text-center">No stock data available matching filters.</td></tr>';
@@ -1405,7 +1468,6 @@
             }
         };
 
-        /* ---------- Admin: user approvals ---------- */
         const AdminController = {
             async load() {
                 const tbody = document.getElementById('tbody-users');
@@ -1417,19 +1479,28 @@
                     const me = AppState.user && u.id === AppState.user.id;
                     const status = u.approved ? '<span class="badge badge-received">Approved</span>' : '<span class="badge badge-transit">Pending</span>';
                     const created = u.created_at ? new Date(u.created_at).toLocaleDateString() : '';
+                    
+                    const name = u.name || '-';
+                    const fname = u.father_name || '-';
+                    const cnic = u.cnic || '-';
+
                     const approveBtn = u.approved
                         ? `<button class="btn-action btn-void" ${me ? 'disabled' : ''} onclick="AdminController.setApproval('${UI.esc(u.id)}', false)">Revoke</button>`
                         : `<button class="btn-action btn-ok" onclick="AdminController.setApproval('${UI.esc(u.id)}', true)">Approve</button>`;
                     const roleBtn = u.role === 'admin'
                         ? `<button class="btn-action btn-slip" ${me ? 'disabled' : ''} onclick="AdminController.setRole('${UI.esc(u.id)}', 'staff')">Make Staff</button>`
                         : `<button class="btn-action btn-edit" onclick="AdminController.setRole('${UI.esc(u.id)}', 'admin')">Make Admin</button>`;
+                    
                     html += `<tr>
+                        <td class="font-bold">${UI.esc(name)}</td>
+                        <td>${UI.esc(fname)}</td>
+                        <td>${UI.esc(cnic)}</td>
                         <td class="font-bold">${UI.esc(u.email)}${me ? ' (you)' : ''}</td>
                         <td>${UI.esc(u.role)}</td><td>${status}</td><td>${UI.esc(created)}</td>
                         <td class="action-cell">${approveBtn}${roleBtn}</td>
                     </tr>`;
                 });
-                tbody.innerHTML = html || '<tr><td colspan="5" class="text-center">No users.</td></tr>';
+                tbody.innerHTML = html || '<tr><td colspan="8" class="text-center">No users found.</td></tr>';
             },
             async setApproval(id, value) {
                 const { error } = await AppState.supabase.from('profiles').update({ approved: value }).eq('id', id);
@@ -1446,7 +1517,6 @@
             }
         };
 
-        /* ---------- Exports ---------- */
         const ExportController = {
             _getCleanTable(tableId) {
                 const table = document.getElementById(tableId).cloneNode(true);
