@@ -49,6 +49,7 @@
         .auth-btn { width:100%; padding:14px; background:var(--primary); color:#fff; border:none; border-radius:var(--radius-md); font-size:16px; font-weight:bold; cursor:pointer; transition:background .2s; margin-top:10px; }
         .auth-btn:hover { background:var(--primary-hover); }
         .auth-btn:disabled { opacity:.6; cursor:not-allowed; }
+        .auth-btn.secondary { background:#fff; color:var(--text-main); border:1px solid var(--border-dark); }
         .auth-links { display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-top:20px; font-size:14px; }
         .auth-links a { color:var(--primary); cursor:pointer; font-weight:500; }
         .auth-links a:hover { text-decoration:underline; }
@@ -74,9 +75,12 @@
         .tab-btn.active.belti-tab { background:var(--warning); color:#fff; }
         .tab-btn.active.stock-tab { background:var(--purple); color:#fff; }
         .tab-btn.active.admin-tab { background:var(--primary); color:#fff; }
+        .tab-badge { background:var(--danger); color:#fff; border-radius:10px; padding:1px 8px; font-size:11px; margin-left:6px; }
         .tab-pane { display:none; animation:fadeIn .3s ease-in-out; }
         .tab-pane.active { display:block; }
         @keyframes fadeIn { from{opacity:0;transform:translateY(5px);} to{opacity:1;transform:translateY(0);} }
+
+        .help-text { background:var(--primary-light); border-left:4px solid var(--primary); padding:10px 14px; border-radius:var(--radius-sm); margin-bottom:15px; font-size:13px; color:var(--text-main); }
 
         /* FORMS */
         .data-entry-card { background:var(--bg-card); padding:25px; border-radius:var(--radius-lg); box-shadow:var(--shadow-md); margin-bottom:25px; border-top:5px solid var(--primary); }
@@ -95,6 +99,7 @@
         .form-actions { margin-top:25px; display:flex; justify-content:flex-end; gap:15px; }
         .btn-submit { padding:12px 28px; background:var(--primary); color:#fff; border:none; border-radius:var(--radius-md); font-weight:bold; cursor:pointer; font-size:15px; transition:opacity .2s; }
         .btn-submit:hover { opacity:.9; }
+        .btn-submit:disabled { opacity:.5; cursor:not-allowed; }
         .btn-submit.btn-inv { background:var(--dark); }
         .btn-submit.btn-in { background:var(--success); }
         .btn-submit.btn-out { background:var(--danger); }
@@ -148,6 +153,37 @@
         .btn-slip { background:var(--dark); }
         .btn-ok { background:var(--success); }
 
+        /* USERS / PERMISSIONS */
+        .role-sel { padding:6px 8px; border:1px solid var(--border-dark); border-radius:var(--radius-sm); font-size:13px; background:#fff; }
+        .perm-grid { display:grid; grid-template-columns:repeat(2,minmax(150px,1fr)); gap:4px 14px; }
+        .perm-grid label { font-size:12px; display:flex; gap:6px; align-items:center; white-space:nowrap; cursor:pointer; }
+        .perm-grid input:disabled + span { color:var(--text-light); }
+
+                /* WAREHOUSE DASHBOARD */
+        .stat-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:14px; margin-bottom:18px; }
+        .stat-card { background:var(--bg-card); border-radius:var(--radius-lg); box-shadow:var(--shadow-md); padding:16px 18px; border-left:6px solid var(--dark); cursor:pointer; transition:transform .15s; }
+        .stat-card:hover { transform:translateY(-2px); }
+        .stat-card.ok { border-left-color:var(--success); }
+        .stat-card.low { border-left-color:var(--warning); }
+        .stat-card.out { border-left-color:var(--danger); }
+        .stat-card.neg { border-left-color:#7f1d1d; }
+        .stat-num { font-size:30px; font-weight:800; line-height:1.1; }
+        .stat-lbl { font-size:12px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:.4px; margin-top:4px; }
+        .alert-box { padding:12px 16px; border-radius:var(--radius-md); margin-bottom:18px; font-size:14px; }
+        .alert-box.warn { background:var(--warning-bg); border-left:5px solid var(--warning); }
+        .alert-box.good { background:var(--success-bg); border-left:5px solid var(--success); }
+        .badge-st-ok { background:var(--success-bg); color:var(--success-hover); }
+        .badge-st-low { background:var(--warning-bg); color:var(--warning-hover); }
+        .badge-st-out { background:var(--danger-bg); color:var(--danger-hover); }
+        .badge-st-neg { background:#7f1d1d; color:#fff; }
+        .lvl-bar { height:6px; background:var(--border-light); border-radius:4px; margin-top:5px; min-width:90px; overflow:hidden; }
+        .lvl-fill { height:100%; border-radius:4px; }
+        .item-sub { font-size:11px; color:var(--text-muted); display:block; }
+        .modal-overlay { position:fixed; inset:0; background:rgba(15,23,42,.55); z-index:200; display:flex; align-items:center; justify-content:center; padding:20px; }
+        .modal-box { background:#fff; border-radius:var(--radius-lg); box-shadow:var(--shadow-lg); width:100%; max-width:1000px; max-height:90vh; overflow:auto; padding:22px; }
+        .modal-head { display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:10px; }
+        .row-opening td { background:var(--bg-input); font-weight:700; }
+
         /* TOASTS */
         #toast-container { position:fixed; bottom:20px; right:20px; z-index:9999; display:flex; flex-direction:column; gap:10px; }
         .toast { background:var(--dark); color:#fff; padding:16px 24px; border-radius:var(--radius-md); box-shadow:var(--shadow-lg); font-weight:500; font-size:14px; display:flex; align-items:center; gap:12px; animation:slideInRight .3s ease-out forwards; opacity:0; transform:translateX(100%); min-width:300px; max-width:90vw; }
@@ -163,10 +199,11 @@
             .app-header { padding:12px 15px; }
             .tab-btn { padding:10px 14px; }
             .filter-bar { flex-direction:column; align-items:stretch; }
+            .perm-grid { grid-template-columns:1fr; }
         }
         @media print {
             body { background:#fff; }
-            .app-header, .nav-tabs, .data-entry-card, .export-toolbar, #toast-container { display:none !important; }
+            .app-header, .nav-tabs, .data-entry-card, .export-toolbar, .help-text, #toast-container { display:none !important; }
             .app-content { padding:0; }
             .table-wrapper { box-shadow:none; border:none; }
             .data-table th, .data-table td { border:1px solid #000; padding:8px; color:#000; }
@@ -233,13 +270,12 @@
         </div>
     </template>
 
-    <!-- NEW: Comprehensive Registration Form -->
     <template id="tpl-register">
         <div class="auth-wrapper">
             <div class="auth-card" style="max-width:600px;">
                 <div class="auth-header">
                     <h1>User Registration</h1>
-                    <p>Apply for system access</p>
+                    <p>Fill in your details. The Administrator will approve your account.</p>
                 </div>
                 <form id="register-form" onsubmit="AuthController.submitRegister(event)">
                     <div class="form-grid">
@@ -253,15 +289,15 @@
                         </div>
                         <div class="auth-form-group">
                             <label>CNIC Number</label>
-                            <input type="text" id="reg-cnic" required placeholder="e.g. 12345-1234567-1">
+                            <input type="text" id="reg-cnic" required placeholder="12345-1234567-1">
                         </div>
                         <div class="auth-form-group">
                             <label>Email Address</label>
-                            <input type="email" id="reg-email" required placeholder="e.g. ali@domain.com">
+                            <input type="email" id="reg-email" required placeholder="e.g. ali@domain.com" autocomplete="username">
                         </div>
                         <div class="auth-form-group">
-                            <label>Password</label>
-                            <input type="password" id="reg-password" required minlength="6" placeholder="••••••••">
+                            <label>Password (min 6 characters)</label>
+                            <input type="password" id="reg-password" required minlength="6" placeholder="••••••••" autocomplete="new-password">
                         </div>
                     </div>
                     <button type="submit" class="auth-btn" style="margin-top:20px;">Submit Registration</button>
@@ -295,17 +331,12 @@
         <div class="auth-wrapper">
             <div class="auth-card text-center">
                 <div class="auth-header">
-                    <h1 style="color:var(--warning);">Approval Pending</h1>
-                    <p>Your account has been created successfully.</p>
+                    <h1 style="color:var(--warning);">⏳ Waiting for Approval</h1>
+                    <p>Your account <b id="pending-email"></b> was created.</p>
                 </div>
-                <p class="mb-2">Please wait for the System Administrator to review your application and grant access.</p>
-                <button class="auth-btn" onclick="AuthController.logout()" style="margin-bottom: 20px;">Back to Login</button>
-
-                <!-- Hidden Master Override for First Admin -->
-                <div style="margin-top:20px; padding-top:20px; border-top:1px dashed var(--border-dark);">
-                    <p style="font-size:12px; color:var(--text-muted); margin-bottom:10px;">Are you the System Owner setting this up for the first time?</p>
-                    <button onclick="AuthController.forceAdmin()" style="background:transparent; color:var(--primary); border:1px solid var(--primary); padding:6px 12px; border-radius:4px; font-size:12px; cursor:pointer;">Claim First Admin Access</button>
-                </div>
+                <p class="mb-2">The Administrator must approve your account before you can enter. This page checks automatically &mdash; you do not need to do anything. As soon as you are approved, the system will open.</p>
+                <button class="auth-btn" onclick="CoreController.checkPendingNow(this)">Check Again Now</button>
+                <button class="auth-btn secondary" onclick="AuthController.logout()">Log Out</button>
             </div>
         </div>
     </template>
@@ -325,28 +356,38 @@
 
             <main class="app-content">
                 <nav class="nav-tabs">
-                    <button class="tab-btn inv-tab active" onclick="TabController.switchTab('inventory', this)">📦 Master Inventory</button>
-                    <button class="tab-btn in-tab" onclick="TabController.switchTab('in', this)">📥 Material IN</button>
-                    <button class="tab-btn out-tab" onclick="TabController.switchTab('out', this)">📤 Material OUT</button>
-                    <button class="tab-btn belti-tab" onclick="TabController.switchTab('belti', this)">🚚 Belti (Transport)</button>
-                    <button class="tab-btn stock-tab" onclick="TabController.switchTab('stock', this)">📊 Automatic Stock</button>
-                    <button class="tab-btn admin-tab hidden" id="tab-btn-admin" onclick="TabController.switchTab('admin', this)">👥 Users</button>
+                    <button class="tab-btn stock-tab" data-tab="stock" onclick="TabController.switchTab('stock')">📊 Warehouse Stock</button>
+                    <button class="tab-btn inv-tab" data-tab="inventory" onclick="TabController.switchTab('inventory')">📦 Master Inventory</button>
+                    <button class="tab-btn in-tab" data-tab="in" onclick="TabController.switchTab('in')">📥 Material IN</button>
+                    <button class="tab-btn out-tab" data-tab="out" onclick="TabController.switchTab('out')">📤 Material OUT</button>
+                    <button class="tab-btn belti-tab" data-tab="belti" onclick="TabController.switchTab('belti')">🚚 Belti (Transport)</button>
+                    
+                    <button class="tab-btn admin-tab" data-tab="admin" onclick="TabController.switchTab('admin')">👥 Users <span id="admin-badge" class="tab-badge hidden"></span></button>
                 </nav>
 
                 <!-- MASTER INVENTORY -->
-                <section id="tab-inventory" class="tab-pane active">
+                <section id="tab-inventory" class="tab-pane">
+                    <div class="help-text"><b>Step 1 of the system.</b> Add every product here once, with its opening stock. Material IN and OUT can only use products that are listed here, so stock is always accurate.</div>
+                    <div class="data-entry-card border-inv">
+                        <div class="card-header"><h2>🏭 Godowns (Storage Places)</h2></div>
+                        <p style="color:var(--text-muted); margin-bottom:10px;">Add each godown / warehouse here. Material IN and OUT will ask which godown, and Warehouse Stock will show stock per godown.</p>
+                        <div id="godown-list" style="margin-bottom:12px;"></div>
+                        <div class="form-grid" style="grid-template-columns:minmax(220px,360px) auto; align-items:end;">
+                            <div class="input-group"><label>New Godown Name</label><input type="text" id="gd-name" placeholder="e.g. Godown 2 - Hyderabad" onkeydown="if(event.key==='Enter'){event.preventDefault();GodownController.add();}"></div>
+                            <div><button type="button" class="btn-submit btn-inv" onclick="GodownController.add()">+ Add Godown</button></div>
+                        </div>
+                    </div>
+
                     <div class="data-entry-card border-inv">
                         <div class="card-header"><h2>Register Master Material</h2></div>
                         <form id="form-inv" onsubmit="InventoryController.saveRecord(event)">
                             <div class="form-grid">
-                                <div class="input-group"><label>Material Name</label><input type="text" id="inv-code" placeholder="e.g. CEM-01" required></div>
-                                <div class="input-group"><label>Material &amp; Description</label><input type="text" id="inv-name" placeholder="e.g. Lucky Cement 50kg" required></div>
+                                <div class="input-group"><label>Item Code</label><input type="text" id="inv-code" placeholder="e.g. CEM-01" required></div>
+                                <div class="input-group"><label>Material Name &amp; Description</label><input type="text" id="inv-name" placeholder="e.g. Lucky Cement 50kg" required></div>
                                 <div class="input-group"><label>Category</label><input type="text" id="inv-category" placeholder="e.g. Construction"></div>
-                                <div class="input-group"><label>Unit of Measure</label>
-                                    <select id="inv-unit"><option value="PCS">PCS</option><option value="BAG">BAG</option><option value="KG">KG</option><option value="TONS">TONS</option><option value="Roll">Roll</option><option value="Box">Box</option><option value="Liter">Liter</option><option value="Feet">Feet</option><option value="MTR">MTR</option><option value="Inch">Inch</option><option value="SqFt">SqFt</option><option value="CuFt">CuFt</option><option value="Packet">Packet</option><option value="Dozen">Dozen</option><option value="Bundle">Bundle</option><option value="Drum">Drum</option><option value="Carton">Carton</option></select>
-                                </div>
+                                <div class="input-group"><label>Unit of Measure</label><select id="inv-unit" class="unit-select"></select></div>
                                 <div class="input-group"><label>Opening Balance (Qty)</label><input type="number" step="any" min="0" id="inv-opening" value="0" required></div>
-                                <div class="input-group"><label>Minimum Stock Alert Level</label><input type="number" step="any" min="0" id="inv-min" value="10" required></div>
+                                <div class="input-group"><label>Low Stock Warning Level</label><input type="number" step="any" min="0" id="inv-min" value="10" required></div>
                             </div>
                             <div class="form-actions">
                                 <button type="button" class="btn-cancel" onclick="FormHelper.clear('inv')">Clear</button>
@@ -363,14 +404,14 @@
                             <button class="btn-export btn-print" onclick="ExportController.toPrint('tbl-inventory','Master Inventory List')">🖨️ Print</button>
                         </div>
                         <div class="filter-bar">
-                            🔍 <b>Filter:</b>
-                            <input type="text" id="filter-inv-name" placeholder="Search by Material Name / Code..." oninput="InventoryController.renderTable()">
+                            🔍 <b>Search:</b>
+                            <input type="text" id="filter-inv-name" placeholder="Search by name, code or category..." oninput="InventoryController.renderTable()">
                             <button class="btn-clear-filter" onclick="FilterController.clear('inv')">Clear Search</button>
                         </div>
                     </div>
                     <div class="table-wrapper">
                         <table class="data-table" id="tbl-inventory">
-                            <thead><tr><th>Item Code</th><th>Material Name</th><th>Category</th><th>Unit</th><th>Opening Stock</th><th>Min Level</th><th>Action</th></tr></thead>
+                            <thead><tr><th>Item Code</th><th>Material Name</th><th>Category</th><th>Unit</th><th>Opening Stock</th><th>Warning Level</th><th>Action</th></tr></thead>
                             <tbody id="tbody-inventory"></tbody>
                         </table>
                     </div>
@@ -378,21 +419,21 @@
 
                 <!-- MATERIAL IN -->
                 <section id="tab-in" class="tab-pane">
+                    <div class="help-text"><b>Use this when goods arrive.</b> Pick the material from the list, type the quantity, and save. Stock goes up automatically.</div>
                     <div class="data-entry-card border-in">
                         <div class="card-header"><h2>Log Material Received (IN)</h2></div>
                         <form id="form-in" onsubmit="InController.saveRecord(event)">
                             <div class="form-grid">
                                 <div class="input-group"><label>Date Received</label><input type="date" id="in-date" required></div>
-                                <div class="input-group"><label>Material Description</label><input type="text" id="in-desc" list="master-inventory-list" required autocomplete="off" placeholder="Type to search master list..."></div>
+                                <div class="input-group"><label>Material (choose from list)</label><input type="text" id="in-desc" list="master-inventory-list" required autocomplete="off" placeholder="Start typing to search..." onchange="DataController.autofillUnit('in-desc','in-unit')"></div>
+                                <div class="input-group"><label>Received Quantity</label><input type="number" step="any" min="0" id="in-qty" required></div>
+                                <div class="input-group"><label>Unit of Measure</label><select id="in-unit" class="unit-select"></select></div>
                                 <div class="input-group"><label>Supplier Name</label><input type="text" id="in-supplier" placeholder="Company/Vendor Name"></div>
                                 <div class="input-group"><label>Vehicle Name/No.</label><input type="text" id="in-vehicle" placeholder="e.g. TRK-452"></div>
                                 <div class="input-group"><label>Driver Mobile</label><input type="text" id="in-mobile" placeholder="03xx-xxxxxxx"></div>
                                 <div class="input-group"><label>Received By</label><input type="text" id="in-receiver" placeholder="Staff Name"></div>
-                                <div class="input-group"><label>Storage Location</label><input type="text" id="in-location" placeholder="e.g. Godown 1"></div>
-                                <div class="input-group"><label>Received Quantity</label><input type="number" step="any" min="0" id="in-qty" required></div>
-                                <div class="input-group"><label>Unit of Measure</label>
-                                    <select id="in-unit"><option value="PCS">PCS</option><option value="BAG">BAG</option><option value="KG">KG</option><option value="TONS">TONS</option><option value="Feet">Feet</option><option value="MTR">MTR</option><option value="Carton">Carton</option></select>
-                                </div>
+                                <div class="input-group"><label>Received Into Godown</label><select id="in-godown" class="godown-select"></select></div>
+                                <div class="input-group"><label>Rack / Shelf (optional)</label><input type="text" id="in-location" placeholder="e.g. Rack A-3"></div>
                             </div>
                             <div class="form-actions">
                                 <button type="button" class="btn-cancel" onclick="FormHelper.clear('in')">Clear</button>
@@ -409,8 +450,8 @@
                             <button class="btn-export btn-print" onclick="ExportController.toPrint('tbl-in','Material IN Report')">🖨️ Print</button>
                         </div>
                         <div class="filter-bar">
-                            🔍 <b>Filter:</b>
-                            <input type="text" id="filter-in-name" placeholder="Search Material / Supplier..." oninput="InController.renderTable()">
+                            🔍 <b>Search:</b>
+                            <input type="text" id="filter-in-name" placeholder="Material / Supplier / Vehicle..." oninput="InController.renderTable()">
                             <label>From:</label>
                             <input type="date" id="filter-in-from" onchange="InController.renderTable()">
                             <label>To:</label>
@@ -420,7 +461,7 @@
                     </div>
                     <div class="table-wrapper">
                         <table class="data-table" id="tbl-in">
-                            <thead><tr><th>Date</th><th>Material Description</th><th>Supplier</th><th>Vehicle</th><th>Mobile</th><th>Receiver</th><th>Location</th><th>Qty</th><th>Unit</th><th>Action</th></tr></thead>
+                            <thead><tr><th>Date</th><th>Material Description</th><th>Supplier</th><th>Vehicle</th><th>Mobile</th><th>Receiver</th><th>Godown / Rack</th><th>Qty</th><th>Unit</th><th>Action</th></tr></thead>
                             <tbody id="tbody-in"></tbody>
                         </table>
                     </div>
@@ -428,16 +469,16 @@
 
                 <!-- MATERIAL OUT -->
                 <section id="tab-out" class="tab-pane">
+                    <div class="help-text"><b>Use this when goods leave the store.</b> Pick the material, type the quantity, and save. Stock goes down automatically. The system warns you if there is not enough stock.</div>
                     <div class="data-entry-card border-out">
                         <div class="card-header"><h2>Log Material Issued (OUT)</h2></div>
                         <form id="form-out" onsubmit="OutController.saveRecord(event)">
                             <div class="form-grid">
                                 <div class="input-group"><label>Date Issued</label><input type="date" id="out-date" required></div>
-                                <div class="input-group"><label>Item Description</label><input type="text" id="out-item" list="master-inventory-list" required autocomplete="off" placeholder="Type to search master list..."></div>
+                                <div class="input-group"><label>Material (choose from list)</label><input type="text" id="out-item" list="master-inventory-list" required autocomplete="off" placeholder="Start typing to search..." onchange="DataController.autofillUnit('out-item','out-unit')"></div>
                                 <div class="input-group"><label>Issued Quantity</label><input type="number" step="any" min="0" id="out-qty" required></div>
-                                <div class="input-group"><label>Unit of Measure</label>
-                                    <select id="out-unit"><option value="PCS">PCS</option><option value="BAG">BAG</option><option value="KG">KG</option><option value="TONS">TONS</option><option value="Feet">Feet</option><option value="MTR">MTR</option><option value="Carton">Carton</option></select>
-                                </div>
+                                <div class="input-group"><label>Unit of Measure</label><select id="out-unit" class="unit-select"></select></div>
+                                <div class="input-group"><label>Issue From Godown</label><select id="out-godown" class="godown-select"></select></div>
                                 <div class="input-group"><label>Demand By</label><input type="text" id="out-demand" placeholder="Person requesting"></div>
                                 <div class="input-group"><label>Approved By</label><input type="text" id="out-approved" placeholder="Authorizing Manager"></div>
                                 <div class="input-group"><label>Issued To Location / Site</label><input type="text" id="out-location" placeholder="e.g. Site Phase 2"></div>
@@ -458,8 +499,8 @@
                             <button class="btn-export btn-print" onclick="ExportController.toPrint('tbl-out','Material OUT Report')">🖨️ Print</button>
                         </div>
                         <div class="filter-bar">
-                            🔍 <b>Filter:</b>
-                            <input type="text" id="filter-out-name" placeholder="Search Material / Demand..." oninput="OutController.renderTable()">
+                            🔍 <b>Search:</b>
+                            <input type="text" id="filter-out-name" placeholder="Material / Person / Site..." oninput="OutController.renderTable()">
                             <label>From:</label>
                             <input type="date" id="filter-out-from" onchange="OutController.renderTable()">
                             <label>To:</label>
@@ -469,7 +510,7 @@
                     </div>
                     <div class="table-wrapper">
                         <table class="data-table" id="tbl-out">
-                            <thead><tr><th>Date</th><th>Item</th><th>Qty</th><th>Unit</th><th>Demand By</th><th>Approved By</th><th>For Location</th><th>Supplier</th><th>Action</th></tr></thead>
+                            <thead><tr><th>Date</th><th>Item</th><th>Qty</th><th>Unit</th><th>Demand By</th><th>Approved By</th><th>Issued To (Site)</th><th>Supplier</th><th>Action</th></tr></thead>
                             <tbody id="tbody-out"></tbody>
                         </table>
                     </div>
@@ -477,6 +518,7 @@
 
                 <!-- BELTI -->
                 <section id="tab-belti" class="tab-pane">
+                    <div class="help-text"><b>Transport record only.</b> Belti (consignment) entries track trucks and freight. They do not change warehouse stock &mdash; use Material IN when the goods actually arrive.</div>
                     <div class="data-entry-card border-belti">
                         <div class="card-header"><h2>Register Goods Consignment (Bilti)</h2></div>
                         <form id="form-belti" onsubmit="BeltiController.saveRecord(event)">
@@ -486,11 +528,9 @@
                                 <div class="input-group"><label>Consignor / Supplier Name</label><input type="text" id="blt-supplier" required placeholder="Shipping Party"></div>
                                 <div class="input-group"><label>Vehicle Name/No.</label><input type="text" id="blt-vehicle" placeholder="e.g. Truck TTA-999"></div>
                                 <div class="input-group"><label>Driver Mobile Number</label><input type="text" id="blt-mobile" placeholder="03xx-xxxxxxx"></div>
-                                <div class="input-group"><label>Material Description</label><input type="text" id="blt-material" list="master-inventory-list" required autocomplete="off" placeholder="What is being shipped?"></div>
+                                <div class="input-group"><label>Material Description</label><input type="text" id="blt-material" list="master-inventory-list" required autocomplete="off" placeholder="What is being shipped?" onchange="DataController.autofillUnit('blt-material','blt-unit')"></div>
                                 <div class="input-group"><label>Quantity</label><input type="number" step="any" min="0" id="blt-qty" required></div>
-                                <div class="input-group"><label>Unit</label>
-                                    <select id="blt-unit"><option value="PCS">PCS</option><option value="BAG">BAG</option><option value="KG">KG</option><option value="TONS">TONS</option><option value="Feet">Feet</option></select>
-                                </div>
+                                <div class="input-group"><label>Unit</label><select id="blt-unit" class="unit-select"></select></div>
                                 <div class="input-group"><label>Freight Amount (Rs.)</label><input type="number" step="any" min="0" id="blt-freight" placeholder="0.00"></div>
                                 <div class="input-group"><label>Destination / Site</label><input type="text" id="blt-site" placeholder="Delivery Location"></div>
                                 <div class="input-group"><label>Consignee (Received By)</label><input type="text" id="blt-receiver" placeholder="Name of receiver"></div>
@@ -514,9 +554,9 @@
                             <button class="btn-export btn-print" onclick="ExportController.toPrint('tbl-belti','Belti Transport Register')">🖨️ Print</button>
                         </div>
                         <div class="filter-bar">
-                            🔍 <b>Filter:</b>
-                            <input type="text" id="filter-belti-name" placeholder="Search Material / Supplier..." oninput="BeltiController.renderTable()">
-                            <input type="text" id="filter-belti-no" placeholder="Search Belti No..." oninput="BeltiController.renderTable()">
+                            🔍 <b>Search:</b>
+                            <input type="text" id="filter-belti-name" placeholder="Material / Supplier / Vehicle..." oninput="BeltiController.renderTable()">
+                            <input type="text" id="filter-belti-no" placeholder="Belti No..." oninput="BeltiController.renderTable()">
                             <label>From:</label>
                             <input type="date" id="filter-belti-from" onchange="BeltiController.renderTable()">
                             <label>To:</label>
@@ -534,58 +574,100 @@
 
                 <!-- STOCK -->
                 <section id="tab-stock" class="tab-pane">
-                    <div class="data-entry-card border-stock" style="padding-bottom:20px;">
-                        <div class="card-header" style="margin-bottom:5px;"><h2 style="color:var(--purple);">Enterprise Automatic Stock Engine</h2></div>
-                        <p style="color:var(--text-muted); font-size:14px; margin-bottom:10px;">
-                            Real-time available inventory.<br>
-                            <b>Formula:</b> <code>[Opening Stock from Master] + [Total Material IN] - [Total Material OUT]</code><br>
-                            <i>Note: Belti transactions are for transport tracking and do not affect warehouse balances.</i>
-                        </p>
-                        <button class="btn-submit btn-inv" onclick="DataController.fetchAllData()" style="padding:8px 16px; font-size:13px;">Refresh From Database</button>
+                    <div class="help-text"><b>Your warehouse at a glance &mdash; nothing to type here.</b> The system counts everything for you: <b>Available = Opening Stock + Received (IN) − Issued (OUT)</b>. Click a coloured box to see only those items. Click <b>📒 History</b> on any item to see every movement with a running balance, like a warehouse stock card.</div>
+
+                    <div class="stat-grid">
+                        <div class="stat-card" onclick="StockController.setStatusFilter('all')"><div class="stat-num" id="st-total">0</div><div class="stat-lbl">Total Items</div></div>
+                        <div class="stat-card ok" onclick="StockController.setStatusFilter('ok')"><div class="stat-num" id="st-ok">0</div><div class="stat-lbl">✅ In Stock</div></div>
+                        <div class="stat-card low" onclick="StockController.setStatusFilter('low')"><div class="stat-num" id="st-low">0</div><div class="stat-lbl">⚠️ Low Stock</div></div>
+                        <div class="stat-card out" onclick="StockController.setStatusFilter('out')"><div class="stat-num" id="st-out">0</div><div class="stat-lbl">⛔ Out of Stock</div></div>
+                        <div class="stat-card neg" onclick="StockController.setStatusFilter('neg')"><div class="stat-num" id="st-neg">0</div><div class="stat-lbl">❗ Negative (check)</div></div>
+                        <div class="stat-card"><div class="stat-num" id="st-today">0</div><div class="stat-lbl">Movements Today</div></div>
                     </div>
 
+                    <div id="stock-alert" class="alert-box"></div>
+
                     <div class="export-toolbar">
-                        <div class="toolbar-title">Real-Time Available Stock</div>
+                        <div class="toolbar-title">Warehouse Stock Register</div>
                         <div class="export-buttons">
-                            <button class="btn-export btn-excel" onclick="ExportController.toExcel('tbl-stock','Current_Available_Stock')">📥 Excel</button>
-                            <button class="btn-export btn-pdf" onclick="ExportController.toPDF('tbl-stock','Current Available Stock','Current_Available_Stock')">📄 PDF</button>
-                            <button class="btn-export btn-print" onclick="ExportController.toPrint('tbl-stock','Current Available Stock')">🖨️ Print</button>
+                            <button class="btn-export btn-print" style="background:var(--purple);" onclick="DataController.fetchAllData()">🔄 Refresh</button>
+                            <button class="btn-export btn-excel" onclick="ExportController.toExcel('tbl-stock','Warehouse_Stock')">📥 Excel</button>
+                            <button class="btn-export btn-pdf" onclick="ExportController.toPDF('tbl-stock','Warehouse Stock Report','Warehouse_Stock')">📄 PDF</button>
+                            <button class="btn-export btn-print" onclick="ExportController.toPrint('tbl-stock','Warehouse Stock Report')">🖨️ Print</button>
                         </div>
                         <div class="filter-bar">
-                            🔍 <b>Filter:</b>
-                            <input type="text" id="filter-stock-name" placeholder="Search Material Name..." oninput="StockController.calculateAndRender()">
-                            <button class="btn-clear-filter" onclick="FilterController.clear('stock')">Clear Search</button>
+                            🔍 <b>Search:</b>
+                            <input type="text" id="filter-stock-name" placeholder="Name, code or category..." oninput="StockController.calculateAndRender()">
+                            <label>Show:</label>
+                            <select id="filter-stock-status" class="role-sel" onchange="StockController.calculateAndRender()">
+                                <option value="all">All items</option>
+                                <option value="attention">Needs attention (low / out / negative)</option>
+                                <option value="ok">In stock</option>
+                                <option value="low">Low stock</option>
+                                <option value="out">Out of stock</option>
+                                <option value="neg">Negative</option>
+                            </select>
+                            <label>Category:</label>
+                            <select id="filter-stock-cat" class="role-sel" onchange="StockController.calculateAndRender()"><option value="">All</option></select>
+                            <label>Godown:</label>
+                            <select id="filter-stock-godown" class="role-sel" onchange="StockController.calculateAndRender()"><option value="">All godowns</option></select>
+                            <button class="btn-clear-filter" onclick="FilterController.clear('stock')">Clear</button>
                         </div>
                     </div>
                     <div class="table-wrapper">
                         <table class="data-table" id="tbl-stock">
                             <thead><tr>
-                                <th>Material / Item Description</th>
-                                <th style="color:var(--dark);">Opening Stock</th>
-                                <th style="color:var(--success);">Total IN</th>
-                                <th style="color:var(--danger);">Total OUT</th>
-                                <th style="color:var(--purple); font-size:15px;">Available Balance</th>
+                                <th>Item</th>
+                                <th>Category</th>
+                                <th>Opening</th>
+                                <th style="color:var(--success);">Received (IN)</th>
+                                <th style="color:var(--danger);">Issued (OUT)</th>
+                                <th style="color:var(--purple); font-size:15px;">Available Now</th>
                                 <th>Unit</th>
+                                <th>Status</th>
+                                <th>Last Movement</th>
+                                <th>Action</th>
                             </tr></thead>
                             <tbody id="tbody-stock"></tbody>
                         </table>
                     </div>
                 </section>
 
-                <!-- ADMIN: USERS -->
+<!-- ADMIN: USERS -->
                 <section id="tab-admin" class="tab-pane">
                     <div class="data-entry-card">
                         <div class="card-header"><h2>User Access Control</h2></div>
-                        <p style="color:var(--text-muted);">Approve new staff accounts, revoke access, or change roles. You cannot change your own account.</p>
+                        <div class="help-text" style="margin-bottom:0;">
+                            <b>How it works:</b><br>
+                            1. A new person registers &rarr; they appear below as <b>Pending</b>.<br>
+                            2. Choose their <b>Role</b> (it fills in the right permissions automatically), then click <b>Approve</b>.<br>
+                            3. To change what a person can do, tick or untick a box &mdash; it saves instantly.<br>
+                            <b>Admin</b> = everything &nbsp;|&nbsp; <b>Manager</b> = everything except Users &nbsp;|&nbsp; <b>Staff</b> = IN, OUT, Belti and Stock only.<br>
+                            Your own account is locked so you cannot lock yourself out.
+                        </div>
+                        <div style="margin-top:15px;"><button class="btn-submit btn-inv" style="padding:8px 16px; font-size:13px;" onclick="AdminController.load()">🔄 Refresh List</button></div>
                     </div>
                     <div class="table-wrapper">
                         <table class="data-table" id="tbl-users">
-                            <thead><tr><th>Name</th><th>Father Name</th><th>CNIC</th><th>Email</th><th>Role</th><th>Status</th><th>Registered</th><th>Action</th></tr></thead>
+                            <thead><tr><th>Name</th><th>Father Name</th><th>CNIC</th><th>Email</th><th>Status</th><th>Role</th><th>What this person can do</th><th>Action</th></tr></thead>
                             <tbody id="tbody-users"></tbody>
                         </table>
                     </div>
                 </section>
             </main>
+
+            <div id="hist-modal" class="modal-overlay hidden" onclick="if(event.target===this)StockController.closeHistory()">
+                <div class="modal-box">
+                    <div class="modal-head"><h2 id="hist-title"></h2><button class="btn-cancel" onclick="StockController.closeHistory()">✖ Close</button></div>
+                    <div id="hist-sub"></div>
+                    <div class="table-wrapper" style="margin:0; box-shadow:none;">
+                        <table class="data-table">
+                            <thead><tr><th>Date</th><th>Type</th><th>Godown</th><th>Details</th><th>Quantity</th><th>Balance</th></tr></thead>
+                            <tbody id="hist-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
     </template>
 
@@ -663,16 +745,44 @@
             const day = String(d.getDate()).padStart(2, '0');
             return d.getFullYear() + '-' + m + '-' + day;
         }
+        function todayDate() { return localDateString(); }
+
+        /* ---------- Permissions model (must match lucky_ims_setup.sql) ---------- */
+        const UNITS = ['PCS','BAG','KG','TONS','Roll','Box','Liter','Feet','MTR','Inch','SqFt','CuFt','Packet','Dozen','Bundle','Drum','Carton'];
+        const PERM_LABELS = {
+            inventory: 'Add / change Master Items',
+            in:        'Material IN',
+            out:       'Material OUT',
+            belti:     'Belti (Transport)',
+            stock:     'View Stock',
+            edit:      'Edit / Remove saved records'
+        };
+        const PERM_KEYS = Object.keys(PERM_LABELS);
+        const PRESETS = {
+            admin:   { inventory:true,  in:true, out:true, belti:true, stock:true, edit:true },
+            manager: { inventory:true,  in:true, out:true, belti:true, stock:true, edit:true },
+            staff:   { inventory:false, in:true, out:true, belti:true, stock:true, edit:false }
+        };
+        const ROLE_LABEL = { admin: 'Admin', manager: 'Manager', staff: 'Staff' };
 
         const AppState = {
             supabase: null,
-            user: null,
+            user: null,           // approved, logged-in user {id,email,name,role,perms}
+            pendingId: null,      // id of a logged-in user waiting for approval
             recovery: false,
             loadingProfile: false,
-            inventory: [], materialIn: [], materialOut: [], belti: [],
+            pollTimer: null,
+            refreshTimer: null,
+            inventory: [], materialIn: [], materialOut: [], belti: [], godowns: [],
             editIds: { inv: null, in: null, out: null, belti: null }
         };
-        function todayDate() { return localDateString(); }
+
+        function can(key) {
+            const u = AppState.user;
+            if (!u) return false;
+            if (u.role === 'admin') return true;
+            return !!(u.perms && u.perms[key]);
+        }
 
         const UI = {
             toast(msg, type = 'info') {
@@ -690,7 +800,7 @@
                 setTimeout(() => {
                     el.style.animation = 'fadeOut 0.3s ease forwards';
                     setTimeout(() => el.remove(), 300);
-                }, 4000);
+                }, 5000);
             },
             money(amount) {
                 let n = parseFloat(amount);
@@ -713,29 +823,12 @@
 
         const FilterController = {
             clear(tab) {
-                if (tab === 'inv') {
-                    const el = document.getElementById('filter-inv-name'); if (el) el.value = '';
-                    InventoryController.renderTable();
-                } else if (tab === 'in') {
-                    const elN = document.getElementById('filter-in-name'); if (elN) elN.value = '';
-                    const elF = document.getElementById('filter-in-from'); if (elF) elF.value = '';
-                    const elT = document.getElementById('filter-in-to'); if (elT) elT.value = '';
-                    InController.renderTable();
-                } else if (tab === 'out') {
-                    const elN = document.getElementById('filter-out-name'); if (elN) elN.value = '';
-                    const elF = document.getElementById('filter-out-from'); if (elF) elF.value = '';
-                    const elT = document.getElementById('filter-out-to'); if (elT) elT.value = '';
-                    OutController.renderTable();
-                } else if (tab === 'belti') {
-                    const elN = document.getElementById('filter-belti-name'); if (elN) elN.value = '';
-                    const elB = document.getElementById('filter-belti-no'); if (elB) elB.value = '';
-                    const elF = document.getElementById('filter-belti-from'); if (elF) elF.value = '';
-                    const elT = document.getElementById('filter-belti-to'); if (elT) elT.value = '';
-                    BeltiController.renderTable();
-                } else if (tab === 'stock') {
-                    const elN = document.getElementById('filter-stock-name'); if (elN) elN.value = '';
-                    StockController.calculateAndRender();
-                }
+                const reset = ids => ids.forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+                if (tab === 'inv') { reset(['filter-inv-name']); InventoryController.renderTable(); }
+                else if (tab === 'in') { reset(['filter-in-name','filter-in-from','filter-in-to']); InController.renderTable(); }
+                else if (tab === 'out') { reset(['filter-out-name','filter-out-from','filter-out-to']); OutController.renderTable(); }
+                else if (tab === 'belti') { reset(['filter-belti-name','filter-belti-no','filter-belti-from','filter-belti-to']); BeltiController.renderTable(); }
+                else if (tab === 'stock') { reset(['filter-stock-name','filter-stock-cat','filter-stock-godown']); const st = document.getElementById('filter-stock-status'); if (st) st.value = 'all'; StockController.calculateAndRender(); }
             }
         };
 
@@ -752,6 +845,7 @@
                 if (f.date) document.getElementById(f.date).value = todayDate();
                 document.getElementById(f.btn).textContent = f.label;
                 AppState.editIds[key] = null;
+                if (typeof GodownController !== 'undefined') GodownController.applyDefaults();
             },
             startEdit(key, id) {
                 AppState.editIds[key] = id;
@@ -760,6 +854,7 @@
             }
         };
 
+        /* ---------- Boot, sessions, approval ---------- */
         const CoreController = {
             boot() {
                 const configStr = localStorage.getItem('lucky_ims_config');
@@ -793,6 +888,11 @@
                 setTimeout(() => location.reload(), 800);
             },
 
+            stopTimers() {
+                clearInterval(AppState.pollTimer); AppState.pollTimer = null;
+                clearInterval(AppState.refreshTimer); AppState.refreshTimer = null;
+            },
+
             async handleAuthChange(event, session) {
                 if (event === 'PASSWORD_RECOVERY') {
                     AppState.recovery = true;
@@ -803,51 +903,131 @@
                 if (event === 'TOKEN_REFRESHED' || event === 'USER_UPDATED') return;
 
                 if (!session) {
-                    AppState.user = null;
+                    this.stopTimers();
+                    AppState.user = null; AppState.pendingId = null;
                     AppState.inventory = []; AppState.materialIn = []; AppState.materialOut = []; AppState.belti = [];
                     UI.mount('tpl-auth');
                     return;
                 }
 
                 if (AppState.user && AppState.user.id === session.user.id) return;
+                if (AppState.pendingId === session.user.id) return;
                 if (AppState.loadingProfile) return;
                 AppState.loadingProfile = true;
-
                 try {
-                    // Try to sync metadata to profiles if missing (helps with registration)
-                    const meta = session.user.user_metadata;
-                    if (meta && meta.name) {
-                        await AppState.supabase.from('profiles').update({
-                            name: meta.name,
-                            father_name: meta.father_name,
-                            cnic: meta.cnic
-                        }).eq('id', session.user.id);
-                    }
-
-                    const { data: profile, error } = await AppState.supabase
-                        .from('profiles').select('*').eq('id', session.user.id).single();
-
-                    if (error || !profile || profile.approved !== true) {
-                        AppState.user = { id: session.user.id, email: session.user.email }; // temp for pending screen
-                        UI.mount('tpl-pending');
-                        return;
-                    }
-                    AppState.user = { id: session.user.id, email: session.user.email, role: profile.role };
-                    this.mountApp();
+                    await this.enter(session.user);
                 } catch (e) {
                     console.error(e);
-                    UI.toast('Error checking profile authorization.', 'error');
+                    UI.toast('Error checking your account. Please reload the page.', 'error');
                 } finally {
                     AppState.loadingProfile = false;
                 }
             },
 
+            async fetchProfile(uid) {
+                return await AppState.supabase.from('profiles').select('*').eq('id', uid).maybeSingle();
+            },
+
+            setUser(id, email, p) {
+                const role = ROLE_LABEL[p.role] ? p.role : 'staff';
+                const perms = role === 'admin'
+                    ? Object.assign({}, PRESETS.admin)
+                    : Object.assign({}, PRESETS[role], p.perms || {});
+                AppState.user = { id, email, name: p.name || '', role, perms };
+            },
+
+            async enter(authUser) {
+                const { data: p, error } = await this.fetchProfile(authUser.id);
+                if (error || !p || p.approved !== true) {
+                    AppState.user = null;
+                    AppState.pendingId = authUser.id;
+                    UI.mount('tpl-pending');
+                    document.getElementById('pending-email').textContent = authUser.email;
+                    this.stopTimers();
+                    AppState.pollTimer = setInterval(() => this.checkPending(authUser), 8000);
+                    return;
+                }
+                AppState.pendingId = null;
+                this.stopTimers();
+                this.setUser(authUser.id, authUser.email, p);
+                this.mountApp();
+            },
+
+            async checkPending(authUser) {
+                try {
+                    const { data: p } = await this.fetchProfile(authUser.id);
+                    if (p && p.approved === true) {
+                        this.stopTimers();
+                        AppState.pendingId = null;
+                        this.setUser(authUser.id, authUser.email, p);
+                        UI.toast('Your account is approved. Welcome!', 'success');
+                        this.mountApp();
+                        return true;
+                    }
+                } catch (e) { console.error(e); }
+                return false;
+            },
+
+            async checkPendingNow(btn) {
+                const { data } = await AppState.supabase.auth.getSession();
+                if (!data.session) return;
+                btn.disabled = true;
+                const ok = await this.checkPending(data.session.user);
+                if (!ok) { UI.toast('Not approved yet. Please wait for the Administrator.', 'info'); btn.disabled = false; }
+            },
+
             mountApp() {
                 UI.mount('tpl-app');
-                document.getElementById('display-user-email').textContent = AppState.user.email + (AppState.user.role === 'admin' ? ' (admin)' : '');
-                if (AppState.user.role === 'admin') document.getElementById('tab-btn-admin').classList.remove('hidden');
-                ['in', 'out', 'belti'].forEach(k => FormHelper.clear(k));
+                const u = AppState.user;
+                document.getElementById('display-user-email').textContent = (u.name || u.email) + ' (' + ROLE_LABEL[u.role] + ')';
+                document.querySelectorAll('select.unit-select').forEach(s => {
+                    s.innerHTML = UNITS.map(x => '<option value="' + x + '">' + x + '</option>').join('');
+                });
+
+                let first = null;
+                document.querySelectorAll('.tab-btn').forEach(b => {
+                    const k = b.dataset.tab;
+                    const ok = (k === 'admin') ? (u.role === 'admin') : can(k);
+                    b.classList.toggle('hidden', !ok);
+                    if (ok && !first) first = k;
+                });
+
+                if (!first) {
+                    document.querySelector('.app-content').innerHTML =
+                        '<div class="data-entry-card text-center"><h2>No access given yet</h2><p style="margin-top:10px;">The Administrator has not given your account any permission. Please ask the Administrator, then log in again.</p></div>';
+                    this.startRefreshTimer();
+                    return;
+                }
+
+                ['inv', 'in', 'out', 'belti'].forEach(k => FormHelper.clear(k));
+                TabController.switchTab(first);
                 DataController.fetchAllData();
+                this.startRefreshTimer();
+                if (u.role === 'admin') AdminController.checkPending(true);
+            },
+
+            // Picks up permission changes made by the Administrator while you are logged in
+            startRefreshTimer() {
+                clearInterval(AppState.refreshTimer);
+                AppState.refreshTimer = setInterval(async () => {
+                    const u = AppState.user;
+                    if (!u) return;
+                    try {
+                        const { data: p, error } = await this.fetchProfile(u.id);
+                        if (error || !p) return;
+                        if (p.approved !== true) {
+                            UI.toast('Your access was removed by the Administrator.', 'warning');
+                            AuthController.logout();
+                            return;
+                        }
+                        const before = JSON.stringify([u.role, u.perms]);
+                        this.setUser(u.id, u.email, p);
+                        if (JSON.stringify([AppState.user.role, AppState.user.perms]) !== before) {
+                            UI.toast('The Administrator updated your permissions.', 'info');
+                            this.mountApp();
+                        }
+                    } catch (e) { console.error(e); }
+                }, 30000);
             }
         };
 
@@ -860,7 +1040,7 @@
                 btn.disabled = true; btn.textContent = 'Authenticating...';
                 const { error } = await AppState.supabase.auth.signInWithPassword({ email, password: pass });
                 if (error) {
-                    UI.toast(error.message, 'error');
+                    UI.toast(error.message === 'Invalid login credentials' ? 'Wrong email or password.' : error.message, 'error');
                     btn.disabled = false; btn.textContent = 'Sign In to Dashboard';
                 }
             },
@@ -868,15 +1048,19 @@
                 e.preventDefault();
                 const name = UI.val('reg-name');
                 const fname = UI.val('reg-fname');
-                const cnic = UI.val('reg-cnic');
+                const cnicRaw = UI.val('reg-cnic').replace(/\s/g, '');
                 const email = UI.val('reg-email');
-                const pass = UI.val('reg-password');
-                const btn = e.target.querySelector('button');
-                
+                const pass = document.getElementById('reg-password').value;
+
+                if (!/^\d{5}-?\d{7}-?\d$/.test(cnicRaw)) return UI.toast('CNIC must be 13 digits, like 12345-1234567-1.', 'error');
+                const d = cnicRaw.replace(/-/g, '');
+                const cnic = d.slice(0, 5) + '-' + d.slice(5, 12) + '-' + d.slice(12);
+
+                const btn = e.target.querySelector('button[type=submit]');
                 btn.disabled = true; btn.textContent = 'Registering...';
 
-                // SignUp with custom metadata
-                const { data, error } = await AppState.supabase.auth.signUp({ 
+                // The database creates the profile automatically from this information.
+                const { data, error } = await AppState.supabase.auth.signUp({
                     email, password: pass,
                     options: { data: { name: name, father_name: fname, cnic: cnic } }
                 });
@@ -886,40 +1070,25 @@
                     btn.disabled = false; btn.textContent = 'Submit Registration';
                     return;
                 }
-
-                // Push details directly to profile table (upsert in case trigger already made row)
-                if (data?.user) {
-                    await AppState.supabase.from('profiles').upsert({
-                        id: data.user.id,
-                        email: email,
-                        name: name,
-                        father_name: fname,
-                        cnic: cnic,
-                        role: 'staff',
-                        approved: false
-                    });
+                if (data && data.user && data.user.identities && data.user.identities.length === 0) {
+                    UI.toast('This email is already registered. Please log in instead.', 'warning');
+                    btn.disabled = false; btn.textContent = 'Submit Registration';
+                    return;
                 }
-
-                UI.toast('Registration submitted successfully! Approval is pending.', 'success');
-                // Will automatically trigger handleAuthChange
-            },
-            async forceAdmin() {
-                // This allows the very first person to bypass the lock
-                if (!AppState.user) return;
-                const { error } = await AppState.supabase.from('profiles').update({ role: 'admin', approved: true }).eq('id', AppState.user.id);
-                if (error) {
-                    UI.toast('Auto-approve failed. ' + error.message, 'error');
-                } else {
-                    UI.toast('First Admin Access Granted! Loading...', 'success');
-                    setTimeout(() => location.reload(), 1000);
+                if (!data.session) {
+                    UI.toast('Registration done. Check your email and click the confirmation link, then log in.', 'success');
+                    UI.mount('tpl-auth');
+                    return;
                 }
+                UI.toast('Registration submitted successfully!', 'success');
+                // handleAuthChange now opens the right screen automatically
             },
             async handleReset() {
                 const email = document.getElementById('auth-email').value.trim();
-                if (!email) return UI.toast('Enter your email address in the box first to reset password.', 'warning');
+                if (!email) return UI.toast('Type your email address in the Email box first, then click Forgot Password.', 'warning');
                 const { error } = await AppState.supabase.auth.resetPasswordForEmail(email, { redirectTo: location.href.split('#')[0] });
                 if (error) UI.toast(error.message, 'error');
-                else UI.toast('Password reset email sent if account exists.', 'success');
+                else UI.toast('If this account exists, a password reset email has been sent.', 'success');
             },
             async handleNewPassword(e) {
                 e.preventDefault();
@@ -937,15 +1106,15 @@
                 location.reload();
             },
             async logout() {
-                AppState.user = null;
+                CoreController.stopTimers();
+                AppState.user = null; AppState.pendingId = null;
                 await AppState.supabase.auth.signOut();
             }
         };
 
         const TabController = {
-            switchTab(tabId, btn) {
-                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
+            switchTab(tabId) {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tabId));
                 document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
                 document.getElementById('tab-' + tabId).classList.add('active');
                 if (tabId === 'stock') StockController.calculateAndRender();
@@ -953,6 +1122,7 @@
             }
         };
 
+        /* ---------- Data ---------- */
         const DataController = {
             async fetchPaged(buildQuery) {
                 const size = 1000;
@@ -975,6 +1145,15 @@
                     AppState.inventory = await this.fetchPaged(() =>
                         sb.from('products').select('*').order('code', { ascending: true }).order('id'));
 
+                    try {
+                        const g = await sb.from('locations').select('*').eq('active', true).order('created_at', { ascending: true });
+                        if (g.error) throw g.error;
+                        AppState.godowns = g.data || [];
+                    } catch (ge) {
+                        AppState.godowns = [];
+                        console.warn('Godowns not available (run lucky_ims_database_update.sql):', ge);
+                    }
+
                     const tx = await this.fetchPaged(() =>
                         sb.from('transactions').select('*').eq('voided', false)
                           .order('created_at', { ascending: false }).order('id'));
@@ -985,6 +1164,7 @@
 
                     InventoryController.renderTable();
                     InventoryController.updateDataList();
+                    GodownController.render();
                     InController.renderTable();
                     OutController.renderTable();
                     BeltiController.renderTable();
@@ -996,10 +1176,11 @@
             },
 
             async voidTransaction(id) {
-                if (!confirm('Are you sure you want to void this record? It will be removed from stock calculations.')) return;
+                if (!can('edit')) return UI.toast('You do not have permission to remove records.', 'error');
+                if (!confirm('Remove this record?\n\nIt will disappear from the lists and from the stock calculation.')) return;
                 const { error } = await AppState.supabase.from('transactions').update({ voided: true }).eq('id', id);
-                if (error) return UI.toast('Error voiding: ' + error.message, 'error');
-                UI.toast('Record voided successfully', 'success');
+                if (error) return UI.toast('Could not remove: ' + error.message, 'error');
+                UI.toast('Record removed', 'success');
                 await this.fetchAllData();
             },
 
@@ -1017,7 +1198,8 @@
                     await this.fetchAllData();
                 } catch (e) {
                     const m = e.message || String(e);
-                    if (m.indexOf('duplicate') !== -1 || m.indexOf('unique') !== -1) UI.toast('That reference / Belti number already exists.', 'error');
+                    if (m.indexOf('row-level security') !== -1) UI.toast('You do not have permission for this action. Ask the Administrator.', 'error');
+                    else if (m.indexOf('duplicate') !== -1 || m.indexOf('unique') !== -1) UI.toast('That reference / Belti number already exists.', 'error');
                     else UI.toast('Error: ' + m, 'error');
                 } finally {
                     btn.disabled = false;
@@ -1025,14 +1207,27 @@
             },
 
             findProduct(name) {
-                const n = name.toLowerCase();
-                return AppState.inventory.find(p => p.active !== false && p.name.toLowerCase() === n) || null;
+                const n = String(name || '').toLowerCase().trim();
+                return AppState.inventory.find(p => p.active !== false && String(p.name).toLowerCase().trim() === n) || null;
+            },
+
+            // When a material is picked, its unit is filled in automatically
+            autofillUnit(descId, unitId) {
+                const p = this.findProduct(document.getElementById(descId).value);
+                if (p && p.unit) document.getElementById(unitId).value = p.unit;
+            },
+
+            requireProduct(desc) {
+                const p = this.findProduct(desc);
+                if (!p) UI.toast('"' + desc + '" is not in the Master Inventory. Pick a material from the list. If it is new, ask someone with Master Inventory permission to add it first.', 'error');
+                return p;
             }
         };
 
         const InventoryController = {
             async saveRecord(e) {
                 e.preventDefault();
+                if (!can('inventory')) return UI.toast('You do not have permission to change Master Inventory.', 'error');
                 const record = {
                     code: UI.val('inv-code'),
                     name: UI.val('inv-name'),
@@ -1058,9 +1253,10 @@
                     await DataController.fetchAllData();
                 } catch (err) {
                     const m = err.message || String(err);
-                    if (m.indexOf('products_code_active_uq') !== -1) UI.toast('Item Code must be unique!', 'error');
-                    else if (m.indexOf('products_name_active_uq') !== -1) UI.toast('An item with this name already exists!', 'error');
-                    else if (m.indexOf('duplicate') !== -1 || m.indexOf('unique') !== -1) UI.toast('Item Code / Name must be unique!', 'error');
+                    if (m.indexOf('products_code_active_uq') !== -1) UI.toast('This Item Code is already used. Use a different code.', 'error');
+                    else if (m.indexOf('products_name_active_uq') !== -1) UI.toast('An item with this name already exists.', 'error');
+                    else if (m.indexOf('row-level security') !== -1) UI.toast('You do not have permission for this action.', 'error');
+                    else if (m.indexOf('duplicate') !== -1 || m.indexOf('unique') !== -1) UI.toast('Item Code / Name already exists.', 'error');
                     else UI.toast('Error: ' + m, 'error');
                 } finally {
                     btn.disabled = false;
@@ -1077,11 +1273,12 @@
                 UI.setVal('inv-opening', rec.opening);
                 UI.setVal('inv-min', rec.min_stock);
                 FormHelper.startEdit('inv', id);
-                UI.toast('Editing Item: ' + rec.code, 'info');
+                UI.toast('Editing item: ' + rec.code, 'info');
             },
 
             async deactivate(id) {
-                if (!confirm('Remove this item from the Master Inventory? Past IN/OUT history is kept.')) return;
+                if (!can('inventory')) return UI.toast('You do not have permission.', 'error');
+                if (!confirm('Remove this item from the Master Inventory?\n\nPast IN/OUT history is kept.')) return;
                 const { error } = await AppState.supabase.from('products').update({ active: false }).eq('id', id);
                 if (error) return UI.toast('Error: ' + error.message, 'error');
                 UI.toast('Item removed from master list', 'success');
@@ -1091,19 +1288,20 @@
 
             renderTable() {
                 const tbody = document.getElementById('tbody-inventory');
+                if (!tbody) return;
                 let active = AppState.inventory.filter(r => r.active !== false);
                 const nameFilter = (document.getElementById('filter-inv-name')?.value || '').toLowerCase().trim();
-                
+
                 if (nameFilter) {
-                    active = active.filter(r => 
-                        (r.name && r.name.toLowerCase().includes(nameFilter)) || 
+                    active = active.filter(r =>
+                        (r.name && r.name.toLowerCase().includes(nameFilter)) ||
                         (r.code && r.code.toLowerCase().includes(nameFilter)) ||
                         (r.category && r.category.toLowerCase().includes(nameFilter))
                     );
                 }
 
                 if (active.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="7" class="text-center">No master items found matching filters.</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="7" class="text-center">No items found. Add your first item using the form above.</td></tr>';
                     return;
                 }
                 let html = '';
@@ -1117,7 +1315,7 @@
                         <td class="text-danger">${UI.esc(rec.min_stock)}</td>
                         <td class="action-cell">
                             <button class="btn-action btn-edit" onclick="InventoryController.editRecord('${UI.esc(rec.id)}')">Edit</button>
-                            <button class="btn-action btn-void" onclick="InventoryController.deactivate('${UI.esc(rec.id)}')">Delete</button>
+                            <button class="btn-action btn-void" onclick="InventoryController.deactivate('${UI.esc(rec.id)}')">Remove</button>
                         </td>
                     </tr>`;
                 });
@@ -1135,24 +1333,35 @@
             }
         };
 
+        // Shared Edit / Remove buttons for IN and OUT rows
+        function rowButtons(controller, id) {
+            if (!can('edit')) return '<span style="color:#94a3b8;">&mdash;</span>';
+            return `<button class="btn-action btn-edit" onclick="${controller}.editRecord('${UI.esc(id)}')">Edit</button>
+                    <button class="btn-action btn-void" onclick="DataController.voidTransaction('${UI.esc(id)}')">Remove</button>`;
+        }
+
         const InController = {
             saveRecord(e) {
                 e.preventDefault();
                 const desc = UI.val('in-desc');
-                const p = DataController.findProduct(desc);
+                const qty = UI.num('in-qty');
+                if (qty <= 0) return UI.toast('Quantity must be more than zero.', 'error');
+                const p = DataController.requireProduct(desc);
+                if (!p) return;
                 const record = {
                     type: 'IN',
                     tdate: document.getElementById('in-date').value,
-                    material_desc: desc,
-                    product_id: p ? p.id : null,
+                    material_desc: p.name,
+                    product_id: p.id,
                     supplier_name: UI.val('in-supplier'),
                     vehicle_name: UI.val('in-vehicle'),
                     mobile_number: UI.val('in-mobile'),
                     receiver: UI.val('in-receiver'),
                     location: UI.val('in-location'),
-                    qty: UI.num('in-qty'),
+                    qty: qty,
                     unit: document.getElementById('in-unit').value
                 };
+                if (!GodownController.attach(record, 'in-godown')) return;
                 DataController.saveTransaction('in', record, 'Material IN');
             },
             editRecord(id) {
@@ -1162,17 +1371,19 @@
                 UI.setVal('in-supplier', r.supplier_name); UI.setVal('in-vehicle', r.vehicle_name);
                 UI.setVal('in-mobile', r.mobile_number); UI.setVal('in-receiver', r.receiver);
                 UI.setVal('in-location', r.location); UI.setVal('in-qty', r.qty); UI.setVal('in-unit', r.unit);
+                GodownController.setSel('in-godown', r.godown_id);
                 FormHelper.startEdit('in', id);
             },
             renderTable() {
                 const tbody = document.getElementById('tbody-in');
+                if (!tbody) return;
                 let list = [...AppState.materialIn];
                 const nameFilter = (document.getElementById('filter-in-name')?.value || '').toLowerCase().trim();
                 const fromDate = document.getElementById('filter-in-from')?.value || '';
                 const toDate = document.getElementById('filter-in-to')?.value || '';
 
                 if (nameFilter) {
-                    list = list.filter(r => 
+                    list = list.filter(r =>
                         (r.material_desc && r.material_desc.toLowerCase().includes(nameFilter)) ||
                         (r.supplier_name && r.supplier_name.toLowerCase().includes(nameFilter)) ||
                         (r.vehicle_name && r.vehicle_name.toLowerCase().includes(nameFilter)) ||
@@ -1183,7 +1394,7 @@
                 if (toDate) list = list.filter(r => r.tdate <= toDate);
 
                 if (list.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="10" class="text-center">No IN records found matching filters.</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="10" class="text-center">No IN records found.</td></tr>';
                     return;
                 }
                 let html = '';
@@ -1195,13 +1406,10 @@
                         <td>${UI.esc(r.vehicle_name)}</td>
                         <td>${UI.esc(r.mobile_number)}</td>
                         <td>${UI.esc(r.receiver)}</td>
-                        <td>${UI.esc(r.location)}</td>
+                        <td>${UI.esc(r.location)}${GodownController.name(r.godown_id) ? '<span class="item-sub">🏭 ' + UI.esc(GodownController.name(r.godown_id)) + '</span>' : ''}</td>
                         <td class="text-success">${UI.esc(r.qty)}</td>
                         <td>${UI.esc(r.unit)}</td>
-                        <td class="action-cell">
-                            <button class="btn-action btn-edit" onclick="InController.editRecord('${UI.esc(r.id)}')">Edit</button>
-                            <button class="btn-action btn-void" onclick="DataController.voidTransaction('${UI.esc(r.id)}')">Void</button>
-                        </td>
+                        <td class="action-cell">${rowButtons('InController', r.id)}</td>
                     </tr>`;
                 });
                 tbody.innerHTML = html;
@@ -1213,19 +1421,22 @@
                 e.preventDefault();
                 const desc = UI.val('out-item');
                 const qty = UI.num('out-qty');
-                const p = DataController.findProduct(desc);
+                if (qty <= 0) return UI.toast('Quantity must be more than zero.', 'error');
+                const p = DataController.requireProduct(desc);
+                if (!p) return;
 
                 const editing = AppState.editIds.out ? AppState.materialOut.find(r => r.id === AppState.editIds.out) : null;
-                const avail = StockController.availableFor({ material_desc: desc, product_id: p ? p.id : null }, editing);
+                const outG = document.getElementById('out-godown').value || null;
+                const avail = StockController.availableFor({ material_desc: p.name, product_id: p.id }, editing, outG);
                 if (qty > avail) {
-                    if (!confirm(`Only ${avail.toFixed(2)} available for "${desc}", but you are issuing ${qty}. Stock will go negative. Continue?`)) return;
+                    if (!confirm(`WARNING: Only ${avail.toFixed(2)} ${p.unit} of "${p.name}" is in stock${outG ? ' in godown "' + GodownController.name(outG) + '"' : ''}, but you are issuing ${qty}.\n\nStock will become negative. Do you still want to save?`)) return;
                 }
 
                 const record = {
                     type: 'OUT',
                     tdate: document.getElementById('out-date').value,
-                    material_desc: desc,
-                    product_id: p ? p.id : null,
+                    material_desc: p.name,
+                    product_id: p.id,
                     qty: qty,
                     unit: document.getElementById('out-unit').value,
                     demand_by: UI.val('out-demand'),
@@ -1233,6 +1444,7 @@
                     location: UI.val('out-location'),
                     supplier_name: UI.val('out-supplier')
                 };
+                if (!GodownController.attach(record, 'out-godown')) return;
                 DataController.saveTransaction('out', record, 'Material OUT');
             },
             editRecord(id) {
@@ -1242,17 +1454,19 @@
                 UI.setVal('out-qty', r.qty); UI.setVal('out-unit', r.unit);
                 UI.setVal('out-demand', r.demand_by); UI.setVal('out-approved', r.approved_by);
                 UI.setVal('out-location', r.location); UI.setVal('out-supplier', r.supplier_name);
+                GodownController.setSel('out-godown', r.godown_id);
                 FormHelper.startEdit('out', id);
             },
             renderTable() {
                 const tbody = document.getElementById('tbody-out');
+                if (!tbody) return;
                 let list = [...AppState.materialOut];
                 const nameFilter = (document.getElementById('filter-out-name')?.value || '').toLowerCase().trim();
                 const fromDate = document.getElementById('filter-out-from')?.value || '';
                 const toDate = document.getElementById('filter-out-to')?.value || '';
 
                 if (nameFilter) {
-                    list = list.filter(r => 
+                    list = list.filter(r =>
                         (r.material_desc && r.material_desc.toLowerCase().includes(nameFilter)) ||
                         (r.demand_by && r.demand_by.toLowerCase().includes(nameFilter)) ||
                         (r.approved_by && r.approved_by.toLowerCase().includes(nameFilter)) ||
@@ -1264,7 +1478,7 @@
                 if (toDate) list = list.filter(r => r.tdate <= toDate);
 
                 if (list.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="9" class="text-center">No OUT records found matching filters.</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="9" class="text-center">No OUT records found.</td></tr>';
                     return;
                 }
                 let html = '';
@@ -1276,12 +1490,9 @@
                         <td>${UI.esc(r.unit)}</td>
                         <td>${UI.esc(r.demand_by)}</td>
                         <td>${UI.esc(r.approved_by)}</td>
-                        <td>${UI.esc(r.location)}</td>
+                        <td>${UI.esc(r.location)}${GodownController.name(r.godown_id) ? '<span class="item-sub">🏭 from ' + UI.esc(GodownController.name(r.godown_id)) + '</span>' : ''}</td>
                         <td>${UI.esc(r.supplier_name)}</td>
-                        <td class="action-cell">
-                            <button class="btn-action btn-edit" onclick="OutController.editRecord('${UI.esc(r.id)}')">Edit</button>
-                            <button class="btn-action btn-void" onclick="DataController.voidTransaction('${UI.esc(r.id)}')">Void</button>
-                        </td>
+                        <td class="action-cell">${rowButtons('OutController', r.id)}</td>
                     </tr>`;
                 });
                 tbody.innerHTML = html;
@@ -1291,6 +1502,8 @@
         const BeltiController = {
             saveRecord(e) {
                 e.preventDefault();
+                const qty = UI.num('blt-qty');
+                if (qty <= 0) return UI.toast('Quantity must be more than zero.', 'error');
                 const record = {
                     type: 'BELTI',
                     tdate: document.getElementById('blt-date').value,
@@ -1299,7 +1512,7 @@
                     vehicle_name: UI.val('blt-vehicle'),
                     mobile_number: UI.val('blt-mobile'),
                     material_desc: UI.val('blt-material'),
-                    qty: UI.num('blt-qty'),
+                    qty: qty,
                     unit: document.getElementById('blt-unit').value,
                     price: UI.num('blt-freight'),
                     location: UI.val('blt-site'),
@@ -1358,6 +1571,7 @@
             },
             renderTable() {
                 const tbody = document.getElementById('tbody-belti');
+                if (!tbody) return;
                 let list = [...AppState.belti];
                 const nameFilter = (document.getElementById('filter-belti-name')?.value || '').toLowerCase().trim();
                 const noFilter = (document.getElementById('filter-belti-no')?.value || '').toLowerCase().trim();
@@ -1365,7 +1579,7 @@
                 const toDate = document.getElementById('filter-belti-to')?.value || '';
 
                 if (nameFilter) {
-                    list = list.filter(r => 
+                    list = list.filter(r =>
                         (r.material_desc && r.material_desc.toLowerCase().includes(nameFilter)) ||
                         (r.supplier_name && r.supplier_name.toLowerCase().includes(nameFilter)) ||
                         (r.vehicle_name && r.vehicle_name.toLowerCase().includes(nameFilter)) ||
@@ -1377,7 +1591,7 @@
                 if (toDate) list = list.filter(r => r.tdate <= toDate);
 
                 if (list.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="10" class="text-center">No Belti records found matching filters.</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="10" class="text-center">No Belti records found.</td></tr>';
                     return;
                 }
                 let html = '';
@@ -1395,8 +1609,8 @@
                         <td><span class="badge ${cls}">${UI.esc(r.status)}</span></td>
                         <td class="action-cell">
                             <button class="btn-action btn-slip" onclick="BeltiController.generateSlip('${UI.esc(r.id)}')">🖨️ Slip</button>
-                            <button class="btn-action btn-edit" style="background:var(--warning);" onclick="BeltiController.editRecord('${UI.esc(r.id)}')">Edit</button>
-                            <button class="btn-action btn-void" onclick="DataController.voidTransaction('${UI.esc(r.id)}')">Void</button>
+                            ${can('edit') ? `<button class="btn-action btn-edit" style="background:var(--warning);" onclick="BeltiController.editRecord('${UI.esc(r.id)}')">Edit</button>
+                            <button class="btn-action btn-void" onclick="DataController.voidTransaction('${UI.esc(r.id)}')">Remove</button>` : ''}
                         </td>
                     </tr>`;
                 });
@@ -1404,14 +1618,100 @@
             }
         };
 
+                        const GodownController = {
+            list() { return AppState.godowns || []; },
+            defaultId() {
+                const g = this.list();
+                const d = g.find(x => x.is_default) || g[0];
+                return d ? d.id : null;
+            },
+            name(id) {
+                const g = this.list().find(x => x.id === id);
+                return g ? g.name : '';
+            },
+            render() {
+                const gs = this.list();
+                const opts = gs.map(g => '<option value="' + UI.esc(g.id) + '">' + UI.esc(g.name) + '</option>').join('');
+                document.querySelectorAll('select.godown-select').forEach(s => {
+                    const keep = s.value;
+                    s.innerHTML = gs.length ? opts : '<option value="">(no godowns set up)</option>';
+                    if (keep) s.value = keep;
+                    if (!s.value) s.value = this.defaultId() || '';
+                });
+                const f = document.getElementById('filter-stock-godown');
+                if (f) {
+                    const keep = f.value;
+                    f.innerHTML = '<option value="">All godowns</option>' + opts;
+                    f.value = keep;
+                    if (f.value !== keep) f.value = '';
+                }
+                const box = document.getElementById('godown-list');
+                if (box) {
+                    box.innerHTML = gs.length ? gs.map(g =>
+                        '<span class="badge badge-ok-stock" style="margin:3px; padding:8px 12px;">🏭 ' + UI.esc(g.name) +
+                        (g.is_default ? ' (main)' : ' <a style="cursor:pointer; color:#ef4444; margin-left:6px;" title="Remove" onclick="GodownController.remove(\'' + UI.esc(g.id) + '\')">✖</a>') +
+                        '</span>').join('')
+                        : '<p style="color:#64748b;">No godowns found. Run <b>lucky_ims_database_update.sql</b> in Supabase, then reload.</p>';
+                }
+            },
+            applyDefaults() {
+                document.querySelectorAll('select.godown-select').forEach(s => { s.value = this.defaultId() || ''; });
+            },
+            setSel(id, v) {
+                const s = document.getElementById(id);
+                if (!s) return;
+                s.value = v || this.defaultId() || '';
+            },
+            // Adds the chosen godown to a record. Returns false if the user forgot to choose.
+            attach(record, selId) {
+                if (!this.list().length) return true;
+                const v = document.getElementById(selId).value;
+                if (!v) { UI.toast('Please choose the godown.', 'error'); return false; }
+                record.godown_id = v;
+                return true;
+            },
+            async add() {
+                if (!can('inventory')) return UI.toast('You do not have permission to add godowns.', 'error');
+                const name = UI.val('gd-name');
+                if (!name) return UI.toast('Type the godown name first.', 'error');
+                const { error } = await AppState.supabase.from('locations').insert([{ name: name }]);
+                if (error) {
+                    const m = error.message || '';
+                    if (m.indexOf('locations_name_uq') !== -1 || m.indexOf('duplicate') !== -1) return UI.toast('A godown with this name already exists.', 'error');
+                    if (m.indexOf('does not exist') !== -1 || m.indexOf('schema cache') !== -1) return UI.toast('Run lucky_ims_database_update.sql in Supabase first.', 'error');
+                    return UI.toast('Error: ' + m, 'error');
+                }
+                UI.setVal('gd-name', '');
+                UI.toast('Godown added', 'success');
+                await DataController.fetchAllData();
+            },
+            async remove(id) {
+                if (!can('inventory')) return UI.toast('You do not have permission.', 'error');
+                const used = AppState.materialIn.concat(AppState.materialOut).some(r => r.godown_id === id);
+                if (used) return UI.toast('This godown has stock records, so it cannot be removed.', 'error');
+                if (!confirm('Remove godown "' + this.name(id) + '"?')) return;
+                const { error } = await AppState.supabase.from('locations').update({ active: false }).eq('id', id);
+                if (error) return UI.toast('Error: ' + error.message, 'error');
+                UI.toast('Godown removed', 'success');
+                await DataController.fetchAllData();
+            }
+        };
+
         const StockController = {
-            build() {
+            view: [],
+            gf: '',
+            // gf = godown filter id ('' means all godowns together)
+            build(gf) {
+                gf = gf || '';
+                const def = GodownController.defaultId();
                 const map = {};
                 const nameIdx = {};
                 AppState.inventory.forEach(item => {
                     if (item.active === false) return;
                     const k = 'P:' + item.id;
-                    map[k] = { name: item.name, opening: parseFloat(item.opening) || 0, in: 0, out: 0, unit: item.unit, min: parseFloat(item.min_stock) || 0, isMaster: true };
+                    const op = parseFloat(item.opening) || 0;
+                    map[k] = { key: k, code: item.code || '', name: item.name, category: item.category || '', opening: (!gf || gf === def) ? op : 0, in: 0, out: 0, unit: item.unit, min: parseFloat(item.min_stock) || 0, isMaster: true, last: '', loc: '', by: {} };
+                    if (def) map[k].by[def] = op;
                     nameIdx[String(item.name).toUpperCase().trim()] = k;
                 });
                 const resolve = (rec) => {
@@ -1419,104 +1719,289 @@
                     const n = String(rec.material_desc || '').toUpperCase().trim();
                     if (nameIdx[n]) return nameIdx[n];
                     const k = 'N:' + n;
-                    if (!map[k]) map[k] = { name: rec.material_desc, opening: 0, in: 0, out: 0, unit: rec.unit, min: 0, isMaster: false };
+                    if (!map[k]) map[k] = { key: k, code: '', name: rec.material_desc, category: '', opening: 0, in: 0, out: 0, unit: rec.unit, min: 0, isMaster: false, last: '', loc: '', by: {} };
                     return k;
                 };
-                AppState.materialIn.forEach(r => { map[resolve(r)].in += parseFloat(r.qty) || 0; });
-                AppState.materialOut.forEach(r => { map[resolve(r)].out += parseFloat(r.qty) || 0; });
-                return { map, resolve };
+                AppState.materialIn.forEach(r => {
+                    const m = map[resolve(r)];
+                    const g = r.godown_id || def || '';
+                    const q = parseFloat(r.qty) || 0;
+                    m.by[g] = (m.by[g] || 0) + q;
+                    if (!gf || g === gf) {
+                        m.in += q;
+                        if (r.tdate && r.tdate > m.last) m.last = r.tdate;
+                        if (!m.loc && r.location) m.loc = r.location;
+                    }
+                });
+                AppState.materialOut.forEach(r => {
+                    const m = map[resolve(r)];
+                    const g = r.godown_id || def || '';
+                    const q = parseFloat(r.qty) || 0;
+                    m.by[g] = (m.by[g] || 0) - q;
+                    if (!gf || g === gf) {
+                        m.out += q;
+                        if (r.tdate && r.tdate > m.last) m.last = r.tdate;
+                    }
+                });
+                return { map, resolve, def };
             },
-            availableFor(rec, editingRec) {
-                const { map, resolve } = this.build();
+            // Stock available for an item, optionally inside one godown
+            availableFor(rec, editingRec, gid) {
+                const { map, resolve, def } = this.build('');
                 const k = resolve(rec);
-                const b = map[k];
-                let avail = b.opening + b.in - b.out;
-                if (editingRec && resolve(editingRec) === k) avail += parseFloat(editingRec.qty) || 0;
+                const m = map[k];
+                let avail = gid ? (m.by[gid] || 0) : (m.opening + m.in - m.out);
+                if (editingRec && resolve(editingRec) === k) {
+                    const eg = editingRec.godown_id || def || '';
+                    if (!gid || eg === gid) avail += parseFloat(editingRec.qty) || 0;
+                }
                 return avail;
+            },
+            statusOf(d) {
+                if (d.avail < 0) return { key: 'neg', label: 'NEGATIVE', cls: 'badge-st-neg', color: '#7f1d1d' };
+                if (d.avail === 0) return { key: 'out', label: 'OUT OF STOCK', cls: 'badge-st-out', color: '#ef4444' };
+                if (!this.gf && d.isMaster && d.avail <= d.min) return { key: 'low', label: 'LOW STOCK', cls: 'badge-st-low', color: '#f59e0b' };
+                return { key: 'ok', label: 'IN STOCK', cls: 'badge-st-ok', color: '#10b981' };
+            },
+            setStatusFilter(v) {
+                const el = document.getElementById('filter-stock-status');
+                if (el) { el.value = v; this.calculateAndRender(); }
             },
             calculateAndRender() {
                 const tbody = document.getElementById('tbody-stock');
                 if (!tbody) return;
-                const { map } = this.build();
-                let rows = Object.keys(map).map(k => map[k]).sort((a, b) => String(a.name).localeCompare(String(b.name)));
+                this.gf = document.getElementById('filter-stock-godown')?.value || '';
+                const { map } = this.build(this.gf);
+                let all = Object.keys(map).map(k => map[k]).sort((a, b) => String(a.name).localeCompare(String(b.name)));
+                // Inside one godown, hide items that were never stocked there
+                if (this.gf) all = all.filter(d => d.opening || d.in || d.out);
+                const cnt = { ok: 0, low: 0, out: 0, neg: 0 };
+                all.forEach(d => { d.avail = d.opening + d.in - d.out; d.st = this.statusOf(d); cnt[d.st.key]++; });
 
-                const nameFilter = (document.getElementById('filter-stock-name')?.value || '').toLowerCase().trim();
-                if (nameFilter) rows = rows.filter(d => d.name && String(d.name).toLowerCase().includes(nameFilter));
+                const today = todayDate();
+                const moves = AppState.materialIn.concat(AppState.materialOut).filter(r => r.tdate === today && (!this.gf || (r.godown_id || GodownController.defaultId()) === this.gf)).length;
+                const setT = (id, v) => { const e = document.getElementById(id); if (e) e.textContent = v; };
+                setT('st-total', all.length); setT('st-ok', cnt.ok); setT('st-low', cnt.low);
+                setT('st-out', cnt.out); setT('st-neg', cnt.neg); setT('st-today', moves);
+
+                const need = all.filter(d => d.st.key !== 'ok');
+                const box = document.getElementById('stock-alert');
+                if (box) {
+                    if (need.length) {
+                        const names = need.slice(0, 8).map(d => UI.esc(d.name) + ' (' + d.avail.toFixed(2) + ' ' + UI.esc(d.unit) + ')').join(', ');
+                        box.className = 'alert-box warn';
+                        box.innerHTML = '⚠️ <b>' + need.length + ' item(s) need attention:</b> ' + names + (need.length > 8 ? ' ... and more' : '') + '. <a style="color:var(--primary); cursor:pointer; font-weight:600;" onclick="StockController.setStatusFilter(\'attention\')">Show only these</a>';
+                    } else {
+                        box.className = 'alert-box good';
+                        box.innerHTML = '✅ All items have healthy stock.';
+                    }
+                }
+
+                const catSel = document.getElementById('filter-stock-cat');
+                if (catSel) {
+                    const keep = catSel.value;
+                    const cats = Array.from(new Set(all.map(d => d.category).filter(Boolean))).sort();
+                    catSel.innerHTML = '<option value="">All</option>' + cats.map(c => '<option value="' + UI.esc(c) + '">' + UI.esc(c) + '</option>').join('');
+                    catSel.value = cats.indexOf(keep) !== -1 ? keep : '';
+                }
+
+                const q = (document.getElementById('filter-stock-name')?.value || '').toLowerCase().trim();
+                const stF = document.getElementById('filter-stock-status')?.value || 'all';
+                const catF = document.getElementById('filter-stock-cat')?.value || '';
+                let rows = all;
+                if (q) rows = rows.filter(d => String(d.name).toLowerCase().includes(q) || String(d.code).toLowerCase().includes(q) || String(d.category).toLowerCase().includes(q));
+                if (stF === 'attention') rows = rows.filter(d => d.st.key !== 'ok');
+                else if (stF !== 'all') rows = rows.filter(d => d.st.key === stF);
+                if (catF) rows = rows.filter(d => d.category === catF);
+                this.view = rows;
 
                 if (rows.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="6" class="text-center">No stock data available matching filters.</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="10" class="text-center">' + (all.length ? 'No items match this filter.' : 'No items yet. Go to Master Inventory and add your products first.') + '</td></tr>';
                     return;
                 }
+                const multi = GodownController.list().length > 1 && !this.gf;
                 let html = '';
-                rows.forEach(d => {
-                    const available = d.opening + d.in - d.out;
-                    const isNegative = available < 0;
-                    const isLow = d.isMaster && available <= d.min;
-                    let cls = 'text-purple', badge = '';
-                    if (isNegative) { cls = 'text-danger'; badge = '<span class="badge badge-low-stock ml-2">NEGATIVE</span>'; }
-                    else if (isLow) { cls = 'text-danger'; badge = '<span class="badge badge-low-stock ml-2">LOW STOCK</span>'; }
+                rows.forEach((d, i) => {
+                    const pct = d.avail <= 0 ? 0 : (d.min > 0 && !this.gf ? Math.min(100, d.avail / (d.min * 3) * 100) : 100);
+                    const quick = d.isMaster
+                        ? ((can('in') ? `<button class="btn-action btn-ok" onclick="StockController.quick('in',${i})">+ Receive</button>` : '') +
+                           (can('out') ? `<button class="btn-action btn-void" onclick="StockController.quick('out',${i})">− Issue</button>` : ''))
+                        : '';
+                    let split = '';
+                    if (multi) {
+                        const parts = Object.keys(d.by).filter(g => Math.abs(d.by[g]) > 0.000001).map(g => UI.esc(GodownController.name(g) || 'Unknown') + ': ' + d.by[g].toFixed(2));
+                        if (parts.length) split = '<span class="item-sub">🏭 ' + parts.join(' &middot; ') + '</span>';
+                    }
                     html += `<tr>
-                        <td><b>${UI.esc(d.name)}</b>${badge}${!d.isMaster ? '<span style="font-size:10px; color:#94a3b8; display:block;">Unregistered Item</span>' : ''}</td>
+                        <td><b>${UI.esc(d.name)}</b><span class="item-sub">${d.code ? 'Code: ' + UI.esc(d.code) : ''}${d.loc ? ' &nbsp;📍 ' + UI.esc(d.loc) : ''}${!d.isMaster ? 'Not in Master Inventory (old record)' : ''}</span></td>
+                        <td>${UI.esc(d.category)}</td>
                         <td class="font-bold">${d.opening.toFixed(2)}</td>
                         <td class="text-success">${d.in.toFixed(2)}</td>
                         <td class="text-danger">${d.out.toFixed(2)}</td>
-                        <td class="${cls}">${available.toFixed(2)}</td>
+                        <td><span class="text-purple" style="color:${d.st.color};">${d.avail.toFixed(2)}</span>${split}<div class="lvl-bar"><div class="lvl-fill" style="width:${pct}%; background:${d.st.color};"></div></div></td>
                         <td><span class="badge badge-ok-stock">${UI.esc(d.unit)}</span></td>
+                        <td><span class="badge ${d.st.cls}">${d.st.label}</span></td>
+                        <td>${d.last ? UI.esc(d.last) : '&mdash;'}</td>
+                        <td class="action-cell"><button class="btn-action btn-slip" onclick="StockController.openHistory(${i})">📒 History</button>${quick}</td>
                     </tr>`;
                 });
                 tbody.innerHTML = html;
-            }
+            },
+
+            // Jump to the IN / OUT form with this item already chosen
+            quick(type, i) {
+                const d = this.view[i];
+                if (!d || !d.isMaster) return;
+                const t = type === 'in' ? { tab: 'in', desc: 'in-desc', unit: 'in-unit', qty: 'in-qty', gd: 'in-godown' } : { tab: 'out', desc: 'out-item', unit: 'out-unit', qty: 'out-qty', gd: 'out-godown' };
+                TabController.switchTab(t.tab);
+                UI.setVal(t.desc, d.name);
+                DataController.autofillUnit(t.desc, t.unit);
+                if (this.gf) GodownController.setSel(t.gd, this.gf);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                setTimeout(() => { const q = document.getElementById(t.qty); if (q) q.focus(); }, 300);
+            },
+
+            // Stock card: every movement with a running balance
+            openHistory(i) {
+                const d = this.view[i];
+                if (!d) return;
+                const { resolve, def } = this.build(this.gf);
+                const recs = [];
+                const inGf = r => !this.gf || (r.godown_id || def || '') === this.gf;
+                AppState.materialIn.forEach(r => { if (resolve(r) === d.key && inGf(r)) recs.push({ t: 'IN', r: r }); });
+                AppState.materialOut.forEach(r => { if (resolve(r) === d.key && inGf(r)) recs.push({ t: 'OUT', r: r }); });
+                recs.sort((a, b) => String(a.r.tdate + (a.r.created_at || '')).localeCompare(String(b.r.tdate + (b.r.created_at || ''))));
+
+                let bal = d.opening;
+                const dName = GodownController.name(def);
+                let html = `<tr class="row-opening"><td colspan="4">Opening Stock${dName && d.opening ? ' (in ' + UI.esc(dName) + ')' : ''}</td><td></td><td class="font-bold">${bal.toFixed(2)}</td></tr>`;
+                recs.forEach(x => {
+                    const q = parseFloat(x.r.qty) || 0;
+                    const gname = GodownController.name(x.r.godown_id || def || '') || '-';
+                    let detail;
+                    if (x.t === 'IN') {
+                        bal += q;
+                        detail = 'From: ' + UI.esc(x.r.supplier_name || '-') + (x.r.vehicle_name ? ' &middot; Vehicle: ' + UI.esc(x.r.vehicle_name) : '') + (x.r.location ? ' &middot; Rack: ' + UI.esc(x.r.location) : '');
+                    } else {
+                        bal -= q;
+                        detail = 'To: ' + UI.esc(x.r.location || '-') + (x.r.demand_by ? ' &middot; Demand: ' + UI.esc(x.r.demand_by) : '') + (x.r.approved_by ? ' &middot; Approved: ' + UI.esc(x.r.approved_by) : '');
+                    }
+                    html += `<tr>
+                        <td>${UI.esc(x.r.tdate)}</td>
+                        <td><span class="badge ${x.t === 'IN' ? 'badge-received' : 'badge-st-out'}">${x.t === 'IN' ? 'RECEIVED' : 'ISSUED'}</span></td>
+                        <td>${UI.esc(gname)}</td>
+                        <td>${detail}</td>
+                        <td class="${x.t === 'IN' ? 'text-success' : 'text-danger'}">${x.t === 'IN' ? '+' : '−'}${q.toFixed(2)}</td>
+                        <td class="font-bold" style="${bal < 0 ? 'color:#7f1d1d;' : ''}">${bal.toFixed(2)}</td>
+                    </tr>`;
+                });
+                document.getElementById('hist-title').textContent = '📒 Stock Card: ' + d.name + (this.gf ? ' — ' + GodownController.name(this.gf) : '');
+                document.getElementById('hist-sub').innerHTML = '<p style="margin-bottom:10px; color:#64748b;">' + (d.code ? 'Code ' + UI.esc(d.code) + ' &nbsp;|&nbsp; ' : '') + 'Unit: <b>' + UI.esc(d.unit) + '</b> &nbsp;|&nbsp; Available now: <b style="color:' + d.st.color + ';">' + d.avail.toFixed(2) + '</b>' + (this.gf ? '' : ' &nbsp;|&nbsp; Warning level: ' + d.min) + '</p>';
+                document.getElementById('hist-body').innerHTML = html;
+                document.getElementById('hist-modal').classList.remove('hidden');
+            },
+            closeHistory() { document.getElementById('hist-modal').classList.add('hidden'); }
         };
 
+        /* ---------- Administrator: users & permissions ---------- */
         const AdminController = {
+            async checkPending(announce) {
+                const { count, error } = await AppState.supabase.from('profiles')
+                    .select('id', { count: 'exact', head: true }).eq('approved', false);
+                if (error) return;
+                const badge = document.getElementById('admin-badge');
+                if (badge) {
+                    badge.textContent = count || '';
+                    badge.classList.toggle('hidden', !count);
+                }
+                if (announce && count) UI.toast(count + ' new user(s) waiting for your approval. Open the Users tab.', 'warning');
+            },
+
             async load() {
                 const tbody = document.getElementById('tbody-users');
                 if (!tbody) return;
                 const { data, error } = await AppState.supabase.from('profiles').select('*').order('created_at', { ascending: false });
                 if (error) return UI.toast('Could not load users: ' + error.message, 'error');
-                let html = '';
-                (data || []).forEach(u => {
-                    const me = AppState.user && u.id === AppState.user.id;
-                    const status = u.approved ? '<span class="badge badge-received">Approved</span>' : '<span class="badge badge-transit">Pending</span>';
-                    const created = u.created_at ? new Date(u.created_at).toLocaleDateString() : '';
-                    
-                    const name = u.name || '-';
-                    const fname = u.father_name || '-';
-                    const cnic = u.cnic || '-';
 
-                    const approveBtn = u.approved
-                        ? `<button class="btn-action btn-void" ${me ? 'disabled' : ''} onclick="AdminController.setApproval('${UI.esc(u.id)}', false)">Revoke</button>`
-                        : `<button class="btn-action btn-ok" onclick="AdminController.setApproval('${UI.esc(u.id)}', true)">Approve</button>`;
-                    const roleBtn = u.role === 'admin'
-                        ? `<button class="btn-action btn-slip" ${me ? 'disabled' : ''} onclick="AdminController.setRole('${UI.esc(u.id)}', 'staff')">Make Staff</button>`
-                        : `<button class="btn-action btn-edit" onclick="AdminController.setRole('${UI.esc(u.id)}', 'admin')">Make Admin</button>`;
-                    
-                    html += `<tr>
-                        <td class="font-bold">${UI.esc(name)}</td>
-                        <td>${UI.esc(fname)}</td>
-                        <td>${UI.esc(cnic)}</td>
+                // Waiting users first
+                const list = (data || []).slice().sort((a, b) => (a.approved === b.approved) ? 0 : (a.approved ? 1 : -1));
+                let html = '';
+                list.forEach(u => {
+                    const me = AppState.user && u.id === AppState.user.id;
+                    const role = ROLE_LABEL[u.role] ? u.role : 'staff';
+                    const perms = role === 'admin' ? PRESETS.admin : Object.assign({}, PRESETS[role], u.perms || {});
+                    const status = u.approved ? '<span class="badge badge-received">Approved</span>' : '<span class="badge badge-transit">Pending</span>';
+                    const locked = me ? 'disabled' : '';
+                    const permBoxes = PERM_KEYS.map(k =>
+                        `<label><input type="checkbox" data-perm="${k}" ${perms[k] ? 'checked' : ''} ${(me || role === 'admin') ? 'disabled' : ''} onchange="AdminController.permChanged('${UI.esc(u.id)}', this)"><span>${UI.esc(PERM_LABELS[k])}</span></label>`
+                    ).join('');
+                    const roleSel = `<select class="role-sel" ${locked} onchange="AdminController.roleChanged('${UI.esc(u.id)}', this)">
+                        ${Object.keys(ROLE_LABEL).map(r => `<option value="${r}" ${r === role ? 'selected' : ''}>${ROLE_LABEL[r]}</option>`).join('')}
+                    </select>`;
+                    const actionBtn = me ? '<span style="color:#94a3b8;">This is you</span>' : (u.approved
+                        ? `<button class="btn-action btn-void" onclick="AdminController.setApproval('${UI.esc(u.id)}', false, this)">Revoke Access</button>`
+                        : `<button class="btn-action btn-ok" onclick="AdminController.setApproval('${UI.esc(u.id)}', true, this)">✔ Approve</button>`);
+
+                    html += `<tr data-id="${UI.esc(u.id)}">
+                        <td class="font-bold">${UI.esc(u.name || '-')}</td>
+                        <td>${UI.esc(u.father_name || '-')}</td>
+                        <td>${UI.esc(u.cnic || '-')}</td>
                         <td class="font-bold">${UI.esc(u.email)}${me ? ' (you)' : ''}</td>
-                        <td>${UI.esc(u.role)}</td><td>${status}</td><td>${UI.esc(created)}</td>
-                        <td class="action-cell">${approveBtn}${roleBtn}</td>
+                        <td>${status}</td>
+                        <td>${roleSel}</td>
+                        <td><div class="perm-grid">${permBoxes}</div></td>
+                        <td class="action-cell">${actionBtn}</td>
                     </tr>`;
                 });
                 tbody.innerHTML = html || '<tr><td colspan="8" class="text-center">No users found.</td></tr>';
+                this.checkPending(false);
             },
-            async setApproval(id, value) {
-                const { error } = await AppState.supabase.from('profiles').update({ approved: value }).eq('id', id);
-                if (error) return UI.toast(error.message, 'error');
-                UI.toast(value ? 'User approved' : 'Access revoked', 'success');
-                this.load();
+
+            rowState(id) {
+                const row = document.querySelector('#tbody-users tr[data-id="' + id + '"]');
+                const role = row.querySelector('.role-sel').value;
+                const perms = {};
+                row.querySelectorAll('input[data-perm]').forEach(c => { perms[c.dataset.perm] = c.checked; });
+                return { row, role, perms };
             },
-            async setRole(id, role) {
-                if (!confirm('Change this user\'s role to ' + role + '?')) return;
-                const { error } = await AppState.supabase.from('profiles').update({ role }).eq('id', id);
-                if (error) return UI.toast(error.message, 'error');
-                UI.toast('Role updated', 'success');
-                this.load();
+
+            isApprovedRow(row) { return !!row.querySelector('.badge-received'); },
+
+            // Choosing a role fills in the matching permissions automatically
+            roleChanged(id, sel) {
+                const { row, role } = this.rowState(id);
+                const preset = PRESETS[role];
+                row.querySelectorAll('input[data-perm]').forEach(c => {
+                    c.checked = !!preset[c.dataset.perm];
+                    c.disabled = (role === 'admin');
+                });
+                if (this.isApprovedRow(row)) this.save(id, {}, 'Role updated');
+            },
+
+            permChanged(id) {
+                const { row } = this.rowState(id);
+                if (this.isApprovedRow(row)) this.save(id, {}, 'Permission saved');
+            },
+
+            async save(id, extra, okMsg) {
+                const { role, perms } = this.rowState(id);
+                const patch = Object.assign({ role: role, perms: role === 'admin' ? PRESETS.admin : perms }, extra || {});
+                const { error } = await AppState.supabase.from('profiles').update(patch).eq('id', id);
+                if (error) { UI.toast(error.message, 'error'); await this.load(); return false; }
+                UI.toast(okMsg, 'success');
+                return true;
+            },
+
+            async setApproval(id, value, btn) {
+                if (!value && !confirm('Stop this person from using the system?')) return;
+                if (btn) btn.disabled = true;
+                const ok = await this.save(id, { approved: value }, value ? 'User approved. They can enter now.' : 'Access revoked.');
+                if (ok) await this.load();
+                else if (btn) btn.disabled = false;
             }
         };
 
+        /* ---------- Exports ---------- */
         const ExportController = {
             _getCleanTable(tableId) {
                 const table = document.getElementById(tableId).cloneNode(true);
@@ -1524,7 +2009,9 @@
                 if (rows.length === 0) return table;
                 const last = rows[0].cells[rows[0].cells.length - 1].innerText.trim().toUpperCase();
                 if (last === 'ACTION') {
-                    for (let i = 0; i < rows.length; i++) rows[i].deleteCell(-1);
+                    for (let i = 0; i < rows.length; i++) {
+                        if (rows[i].cells.length > 1) rows[i].deleteCell(-1);
+                    }
                 }
                 return table;
             },
